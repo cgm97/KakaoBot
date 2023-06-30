@@ -90,20 +90,22 @@ function getTomorrowWeatherInfo(area) {
 
 try{
         // 오전 예상 온도
-        let exp_temp1 = _am.select(".temperature_text strong").text().substr(0,8);
+        let exp_temp1_str = _am.select(".temperature_text strong").text().substr(0,5);
+        let exp_temp1_temp = _am.select(".temperature_text strong").text().substr(5,3);
         // 오전 예상 날씨 , 강수확률
         let exp_weather1 = _am.select(".temperature_info p")[0].text();
         let exp_percent1 = _am.select(".temperature_info .summary_list .desc")[0].text();
 
         // 오후 예상 온도
-        let exp_temp2 = _pm.select(".temperature_text strong").text().substr(0,8);
+        let exp_temp2_str = _pm.select(".temperature_text strong").text().substr(0,5);
+        let exp_temp2_temp = _pm.select(".temperature_text strong").text().substr(5,3);
         // 오후 예상 날씨 , 강수확률
         let exp_weather2 = _pm.select(".temperature_info p")[0].text();
         let exp_percent2 = _pm.select(".temperature_info .summary_list .desc")[0].text();
        
-        retMsg += "내일 " + area + " 날씨\n"; 
-        retMsg += "오전 " + exp_temp1 + '이며  ' + exp_weather1 + ' (강수확률 : '+exp_percent1+')\n';
-        retMsg += "오후 " + exp_temp2 + '이며  ' + exp_weather2 + ' (강수확률 : '+exp_percent2+')';
+        retMsg += "내일 " + area + " 날씨\n\n"; 
+        retMsg += "[오전] \n" + exp_temp1_str + ' : ' + exp_temp1_temp +'\n날씨 : '+ exp_weather1 + ' (강수확률 '+exp_percent1+')\n\n';
+        retMsg += "[오후] \n" + exp_temp2_str + ' : ' + exp_temp2_temp +'\n날씨 : '+ exp_weather2 + ' (강수확률 '+exp_percent2+')';
 
     }catch(e){
         retMsg = e;
