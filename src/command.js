@@ -9,7 +9,7 @@ const scriptName = "command";
  * (string) packageName
  */
 
-let _CMD = ["/명령어","/날씨 지역명","/내일날씨 지역명"];
+let _CMD = ["/명령어","/날씨 지역명","/내일날씨 지역명","/출석","/출석목록","/정보 닉네임"];
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
     if(msg.startsWith("/")){
         let cmd = msg.slice(1);
