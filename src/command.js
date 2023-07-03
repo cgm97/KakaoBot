@@ -9,7 +9,8 @@ const scriptName = "command";
  * (string) packageName
  */
 
-let _CMD = ["/명령어","/날씨 지역명","/내일날씨 지역명","/출석","/출석목록","/정보 닉네임"];
+let _CMD = ["/명령어","/이모티콘","/날씨 지역명","/내일날씨 지역명","/출석","/출석목록","/정보 닉네임","/띠별운세 띠","/별자리운세 별자리"];
+let _EMOJI = ["[따자하오]","[머쓱하오]","[감사하오]","[빠직하오]","[씨익하오]"];
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
     if(msg.startsWith("/")){
         let cmd = msg.slice(1);
@@ -24,6 +25,17 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     retMsg += _CMD[i] + "\n";
                 } else {
                     retMsg += _CMD[i];
+                }
+            }
+            replier.reply(retMsg);
+        }
+        else if(param == '이모티콘'){
+            var retMsg = '';
+            for(var i=0; i < _EMOJI.length; i++){
+                if(i < _EMOJI.length-1){
+                    retMsg += _EMOJI[i] + "\n";
+                } else {
+                    retMsg += _EMOJI[i];
                 }
             }
             replier.reply(retMsg);

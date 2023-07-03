@@ -1,4 +1,4 @@
-const scriptName = "weather";
+const scriptName = "utill";
 /**
  * (string) room
  * (string) sender
@@ -34,14 +34,32 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 }
                 else {
                     replier.reply('/내일날씨 지역명');
+                } 
+            }
+            else if(param == '띠별운세'){
+                let ddi = msg.substr(cmdArr[0].length + 1).trim();
+                if(isNaN(ddi)){
+                    replier.reply(ddiLuckyInfo(ddi));
                 }
-                
+                else {
+                    replier.reply('/띠별운세 띠');
+                } 
+            }
+            else if(param == '별자리운세'){
+                let animal = msg.substr(cmdArr[0].length + 1).trim();
+                if(isNaN(animal)){
+                    replier.reply(animalLuckyInfo(animal));
+                }
+                else {
+                    replier.reply('/별자리운세 별자리');
+                } 
             }
         }
     // }
 
 }
 
+// 오늘날씨
 function getTodayWeatherInfo(area) {
     var data = org.jsoup.Jsoup.connect("https://m.search.naver.com/search.naver?&query=날씨+" + area).get();
 
@@ -81,6 +99,7 @@ function getTodayWeatherInfo(area) {
     return retMsg;    
 }
 
+// 내일날씨
 function getTomorrowWeatherInfo(area) {
     var data = org.jsoup.Jsoup.connect("https://m.search.naver.com/search.naver?&query=내일날씨+" + area).get();
 
@@ -115,6 +134,52 @@ try{
     return retMsg;      
 }
 
+// 띠운세
+function ddiLuckyInfo(ddi) {
+    var data = org.jsoup.Jsoup.connect("https://m.search.naver.com/search.naver?&query="+ddi+"운세").get();
+
+    let retMsg = '';
+    let info = data.select("#ct > section.sc.cs_nlucky._cs_nlucky > div > div.animal_star_area > div > div._flickingContainer > div > div:nth-child(1) > div > p").text();
+    let year_info_list = data.select("#ct > section.sc.cs_nlucky._cs_nlucky > div > div.animal_star_area > div > div._flickingContainer > div > div:nth-child(1) > div > ul");
+
+    let year_info = year_info_list[0].text();
+    var list = year_info.split('.');
+try{   
+        retMsg += "오늘의 운세 [" + ddi + "] \n\n"; 
+        retMsg += info;
+        retMsg += "\n\n"
+        list.forEach(function(year_lucky) {
+            if(year_lucky.indexOf('년생') != -1){
+                retMsg += "\n"
+            }
+            retMsg += year_lucky.trim()+"\n"
+        });
+
+    }catch(e){
+        retMsg = e;
+        Log.e(e);
+    }
+ 
+    return retMsg;      
+}
+
+// 별자리운세
+function animalLuckyInfo(animal) {
+    var data = org.jsoup.Jsoup.connect("https://m.search.naver.com/search.naver?&query="+animal+"운세").get();
+
+    let retMsg = '';
+    let info = data.select("#ct > section.sc.cs_nlucky._cs_nlucky > div > div.animal_star_area > div > div._flickingContainer > div > div:nth-child(1) > div > p").text();
+try{   
+        retMsg += "오늘의 운세 [" + animal + "] \n\n"; 
+        retMsg += info;
+
+    }catch(e){
+        retMsg = e;
+        Log.e(e);
+    }
+ 
+    return retMsg;      
+}
 //아래 4개의 메소드는 액티비티 화면을 수정할때 사용됩니다.
 function onCreate(savedInstanceState, activity) {
   var textView = new android.widget.TextView(activity);
