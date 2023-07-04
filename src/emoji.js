@@ -20,14 +20,17 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             else if(param == '[머쓱하오]'){
                 replier.reply(emoji_img('머쓱하오','https://cdn.discordapp.com/attachments/840183896548966411/1125423268451590234/KakaoTalk_20230703_223535563.jpg'));          
             }
-            else if(param == '[감사하오]'){
-                replier.reply(emoji_img('감사하오','https://cdn.discordapp.com/attachments/840183896548966411/1125423642117951558/KakaoTalk_20230703_223535563_02.jpg'));          
+            else if(param == '[시예시예콩]'){
+                replier.reply(emoji_img('','https://cdn.discordapp.com/attachments/840183896548966411/1125801983492759685/KakaoTalk_20230704_235354806_01.jpg'));          
             }
             else if(param == '[빠직하오]'){
                 replier.reply(emoji_img('빠직하오','https://cdn.discordapp.com/attachments/840183896548966411/1125425014825562242/KakaoTalk_20230703_223535563_03.jpg'));          
             }
             else if(param == '[씨익하오]'){
                 replier.reply(emoji_img('씨익하오','https://cdn.discordapp.com/attachments/840183896548966411/1125425461648957640/KakaoTalk_20230703_223535563_04.jpg'));          
+            }
+            else if(param == '[츄릅콩]'){
+                replier.reply(emoji_img('츄릅','https://cdn.discordapp.com/attachments/840183896548966411/1125802237235572867/KakaoTalk_20230704_235354806.jpg'));          
             }
 
 }

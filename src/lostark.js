@@ -12,9 +12,9 @@ importPackage(android.graphics);
  * (string) packageName
  */
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
-
+    
     // if(room == '빈틈 테스트'){
-        if(msg.startsWith("/")){
+        if(msg.startsWith(".")){
             let cmd = msg.slice(1);
             var cmdArr = cmd.split(' ');
     
@@ -26,15 +26,24 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     replier.reply(getUserInfo(nickName));
                 }
                 else {
-                    replier.reply('/정보 캐릭명');
+                    replier.reply('.정보 캐릭명');
+                }              
+            }
+            if(param == '보석'){
+                let nickName = msg.substr(cmdArr[0].length + 1).trim();
+                if(isNaN(nickName)){
+                    replier.reply(getUserGem(nickName));
                 }
-                
+                else {
+                    replier.reply('.보석 캐릭명');
+                }              
             }
         }
     // }
 
 }
 
+// 유저 정보 조회
 function getUserInfo(nickName) {
     var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
     var data = data0.select("div.profile-ingame");
@@ -64,6 +73,64 @@ function getUserInfo(nickName) {
     result += '\n\n' + characterImg;
 
     return result;
+}
+
+// 보석 정보 조회
+function getUserGem(nickName) {
+
+    var gemLvJson = new Array() ;
+    var gemInfoJson = new Array() ;
+
+    var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
+    var data = data0.select("div.profile-ingame");
+    
+    // 보석 레벨
+    var gemLvList = data.select("#profile-jewel > div > div.jewel__wrap").select("span");
+    var gemLvInfo = gemLvList.select(".jewel_level");
+    var gemidInfo = gemLvList.select(".jewel_btn");
+    
+    // 보석 상세내용
+    var gemList = data.select("#profile-jewel > div > div.jewel-effect__list > div > ul").select("li")
+
+    // 보석 레벨 Json
+    for(var i=0; i<gemLvInfo.length; i++){
+        var gemInfo = gemLvInfo[i].text();
+        var gemId = gemidInfo[i].attr("id");
+        gemLvJson.push({'id' : gemId, 'gemInfo' : gemInfo});
+    }
+
+    // 보석 내용 json
+    for(var i=0; i<gemList.length; i++){
+        var gemInfo = gemList[i].select('.skill_detail').text();
+        var gemKey = gemList[i].select("span").attr("data-gemkey");
+        gemInfoJson.push({'id' : gemKey, 'gemInfo' : gemInfo});
+    }
+    
+    // 보석 id 값으로 비교하여 일치한 데이터 생성
+    var headText = '';
+    var bodyText = '';
+    var powerGemCnt = 0; // 멸화갯수
+    var coolGemCnt = 0;  // 홍염갯수
+    for(var i=0; i<gemLvJson.length; i++){
+        for(var j=0; j<gemInfoJson.length; j++){
+            if(gemLvJson[i].id == gemInfoJson[j].id){
+                if(gemInfoJson[j].gemInfo.indexOf('증가') != -1){
+                    bodyText += (gemLvJson[i].gemInfo + ' 멸화 '+ gemInfoJson[j].gemInfo) +'\n';
+
+                    powerGemCnt++;
+                } else{
+                    bodyText += (gemLvJson[i].gemInfo + ' 홍염 '+ gemInfoJson[j].gemInfo) +'\n';
+
+                    coolGemCnt++;
+                }
+                continue;
+            }
+        }
+    }
+
+    headText += nickName+ ' 님의 보석 현황\n';
+    headText += '멸화 ['+powerGemCnt+'개] 홍염 ['+coolGemCnt+'개]\n\n';
+    return headText + bodyText;
 }
 
 function character_img(nickName, imgUrl){
