@@ -54,6 +54,9 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     replier.reply('/별자리운세 별자리');
                 } 
             }
+            else if(param == '로또'){
+                replier.reply(lotto(sender));
+            }
         }
     // }
 
@@ -180,6 +183,101 @@ try{
  
     return retMsg;      
 }
+
+// 로또
+function lotto(nickName) {
+    var data = org.jsoup.Jsoup.connect("https://m.search.naver.com/search.naver?&query=로또번호").get();
+
+    let retMsg = '';
+
+    let bDay = data.select("#ct >section.sc.mcs_lotto.mcs_common_module._lotto > div.api_subject_bx > div.content_wrap > div > div > div.tab_area > div.type_flick_select > div > a.text._slide_board_trigger._text").text();
+    let lottoNum = data.select("#ct > section.sc.mcs_lotto.mcs_common_module._lotto > div.api_subject_bx > div.content_wrap > div > div > div:nth-child(2) > div.win_number_box > div.win_ball");
+    let moneyTbody = data.select("#ct > section.sc.mcs_lotto.mcs_common_module._lotto > div.api_subject_bx > div.content_wrap > div > div > div:nth-child(3) > div > table > tbody");
+    
+    var lottoBuyNumArray = []; //구매 번호 생성할 array
+    var lottoBuyNumIndex = 0; //구매 번호 배열 순서
+    var lottoBuyNum = ""; //로또번호 생성 숫자
+    while(lottoBuyNumArray.length < 6){
+            lottoBuyNum = Math.floor(Math.random()*(45)) + 1; //1~45 숫자 랜덤 생성
+            if(lottoBuyNumArray.indexOf(lottoBuyNum) == -1){ //구매 번호에 없으면 구매 번호 추가
+                lottoBuyNumArray[lottoBuyNumIndex] = lottoBuyNum;
+                lottoBuyNumIndex++;
+            }
+        }
+
+    try{   
+        let winNum = lottoNum.select(".winning_number").text();
+        let bonusNum = lottoNum.select(".bonus_number").text();
+        
+        var winNumArray = winNum.split(' ');
+        winNumArray.push(bonusNum);
+
+        var pickCnt = 0;
+        //당첨값과 비교
+        for(var j=0; j < 7; j++){
+            for(var k=0; k <6; k++){
+                if(winNumArray [j] == lottoBuyNumArray[k]){
+                    if(j == 6){
+                        bonusFlag = true;
+                    }
+                    else{
+                        pickCnt++;
+                    }
+                }
+            }
+        }
+
+        if(pickCnt == 6){
+            pickRankMsg  = "🥇등 당첨!!\n";
+            pickRankMsg += "당첨금 : " +moneyTbody.select(".emphasis")[0].text().substr(8);
+        }
+        else if(pickCnt == 5){
+            if(bonusFlag){
+                pickRankMsg  = "🥈등 당첨!!\n";
+                pickRankMsg += "당첨금 : " + moneyTbody.select(".emphasis")[1].text().substr(8);
+            }
+            else{
+                pickRankMsg  = "🥉등 당첨!!\n";
+                pickRankMsg += "당첨금 : " + moneyTbody.select(".emphasis")[2].text().substr(8);
+            }
+        }
+        else if(pickCnt == 4){
+            pickRankMsg  = "4등 당첨!!\n";
+            pickRankMsg += "당첨금 : " + moneyTbody.select(".emphasis")[3].text().substr(8);
+        }
+        else if(pickCnt == 3){
+            pickRankMsg  = "5등 당첨!!\n";
+            pickRankMsg += "당첨금 : " + moneyTbody.select(".emphasis")[4].text().substr(8);
+        }
+        else{
+            pickRankMsg  = "꽝ㅋㅋㅋ";
+        }
+
+        lottoBuyNumArray = lottoBuyNumArray.sort(function(a,b){
+            return a - b;
+        });
+        
+        var lottoBuyStr = '';
+        for(var i=0; i<lottoBuyNumArray.length;i++){
+            lottoBuyStr += lottoBuyNumArray[i] +' ';
+        }
+
+        retMsg += "["+bDay+"] 기준\n\n";
+        retMsg += "만약... "+nickName+"님이 로또를 구매했다면?\n\n";
+        retMsg += "------------------------------------------------------------\n";
+        retMsg += "저번주 당첨 번호 : " + winNum +" + "+ bonusNum+"\n";
+        retMsg += "구매한 로또 번호 : " + lottoBuyStr +"\n";
+        retMsg += "------------------------------------------------------------\n";
+        retMsg += pickRankMsg;
+    }catch(e){
+        retMsg = e;
+        Log.e(e);
+    }
+ 
+    return retMsg;      
+}
+
+
 //아래 4개의 메소드는 액티비티 화면을 수정할때 사용됩니다.
 function onCreate(savedInstanceState, activity) {
   var textView = new android.widget.TextView(activity);
