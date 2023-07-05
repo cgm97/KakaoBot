@@ -264,10 +264,10 @@ function lotto(nickName) {
 
         retMsg += "["+bDay+"] 기준\n\n";
         retMsg += "만약... "+nickName+"님이 로또를 구매했다면?\n\n";
-        retMsg += "------------------------------------------------------------\n";
+        retMsg += "------------------------------------\n";
         retMsg += "저번주 당첨 번호 : " + winNum +" + "+ bonusNum+"\n";
         retMsg += "구매한 로또 번호 : " + lottoBuyStr +"\n";
-        retMsg += "------------------------------------------------------------\n";
+        retMsg += "------------------------------------\n\n";
         retMsg += pickRankMsg;
     }catch(e){
         retMsg = e;
