@@ -206,12 +206,12 @@ function getUseritem(nickName) {
     var elixirTxt = ''; // 엘릭서 담긴 정보
     var sumLv = 0;
     for(var i = 0; i < elixir.length ;i++){
-        var elixir_option_1 = elixir[i].select(".flex-1").text();
-        var elixir_lv_1 = elixir[i].select(".tabular-nums").text();
-        var intLv = parseInt(elixir_lv_1.substr('3'));
+        var elixir_option = elixir[i].select(".flex-1").text();
+        var elixir_lv_ = elixir[i].select(".tabular-nums").text();
+        var intLv = parseInt(elixir_lv_.substr('3'));
 
         sumLv += intLv;
-        elixirTxt += elixir_option_1 + " " + elixir_lv_1 +"\n";
+        elixirTxt += elixir_option + " " + elixir_lv_ +"\n";
     }
 
 
