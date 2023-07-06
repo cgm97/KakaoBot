@@ -146,7 +146,7 @@ function getUserGem(nickName) {
     return headText + bodyText;
 }
 
-// 유저 정보 조회
+// 유저 장비 조회
 function getUseritem(nickName) {
     var data0 = org.jsoup.Jsoup.connect("https://api.losonsil.com/search/" + nickName).ignoreContentType(true).get().text();
     var data1 = org.jsoup.Jsoup.connect("https://iloa.gg/character/" + nickName).ignoreContentType(true).get();
