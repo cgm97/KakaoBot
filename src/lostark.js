@@ -38,6 +38,21 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     replier.reply('.보석 캐릭명');
                 }              
             }
+            if(param == '분배금'){
+                let gold = msg.substr(cmdArr[0].length + 1).trim();
+                if(!isNaN(gold)){
+                    replier.reply(calGold(gold));
+                }
+            }
+            if(param == '장비'){
+                let nickName = msg.substr(cmdArr[0].length + 1).trim();
+                if(isNaN(nickName)){
+                    replier.reply(getUseritem(nickName));
+                }
+                else {
+                    replier.reply('.장비 캐릭명');
+                }        
+            }
         }
     // }
 
@@ -62,9 +77,7 @@ function getUserInfo(nickName) {
         "닉네임 : " + nickName +
         "\n직업 : " + job +
         "\n서버 : " + server +
-        "\n전투 레벨 : " + lv_ba +
-        "\n원정대 레벨 : " + lv_ex +
-        "\n장비 레벨 : " + lv_it +
+        "\n템/전/원 : " + lv_it + "/" + lv_ba + "/" + lv_ex;
         "\n칭호 : " + title +
         "\nPVP : " + pvp;
     if (guild != "-") result += "\n길드 : " + guild;
@@ -133,6 +146,134 @@ function getUserGem(nickName) {
     return headText + bodyText;
 }
 
+// 유저 정보 조회
+function getUseritem(nickName) {
+    var data0 = org.jsoup.Jsoup.connect("https://api.losonsil.com/search/" + nickName).ignoreContentType(true).get().text();
+    var data1 = org.jsoup.Jsoup.connect("https://iloa.gg/character/" + nickName).ignoreContentType(true).get();
+  
+    var infoJson = JSON.parse(data0);
+
+    // 각인
+    var ablity = infoJson.ablity;
+    // 장비
+    var equip = infoJson.equip;
+    var equip1 = equip['000']; // 머리
+    var equip2 = equip['001']; // 견갑
+    var equip3 = equip['002']; // 상의
+    var equip4 = equip['003']; // 하의
+    var equip5 = equip['004']; // 장갑
+    var equip6 = equip['005']; // 견갑
+    // 품질
+    var percent = infoJson.equip_quality;
+    var percent1 = percent['000']; // 머리
+    var percent2 = percent['001']; // 견갑
+    var percent3 = percent['002']; // 상의
+    var percent4 = percent['003']; // 하의
+    var percent5 = percent['004']; // 장갑
+    var percent6 = percent['005']; // 견갑
+    // 카드
+    var card = infoJson.card_data;
+    var card1 = card['0'];
+    var card2 = card['1'];
+    var card3 = card['2'];
+    var card4 = card['3'];
+    var card5 = card['4'];
+    var card6 = card['5'];
+    // level
+    var level = infoJson.level;
+    // class
+    var classs = infoJson.class;
+    // server
+    var server = infoJson.server;
+    var guild = infoJson.guild;
+    // 특성
+    var stat1 = infoJson.stat1; // 치명
+    var stat2 = infoJson.stat2; // 특화
+    var stat3 = infoJson.stat3; // 제압
+    var stat4 = infoJson.stat4; // 신속
+    var stat5 = infoJson.stat5; // 인내
+    var stat6 = infoJson.stat6; // 숙련
+
+    // 공격력
+    var power = infoJson.attack;
+    //hp
+    var hp = infoJson.hp;
+
+
+    // 엘릭서 정보
+    var elixir = data1.select(".flex.gap-4 div").select(".flex.items-center.space-x-2.font-medium");
+    
+    var elixirTxt = ''; // 엘릭서 담긴 정보
+    var sumLv = 0;
+    for(var i = 0; i < elixir.length ;i++){
+        var elixir_option_1 = elixir[i].select(".flex-1").text();
+        var elixir_lv_1 = elixir[i].select(".tabular-nums").text();
+        var intLv = parseInt(elixir_lv_1.substr('3'));
+
+        sumLv += intLv;
+        elixirTxt += elixir_option_1 + " " + elixir_lv_1 +"\n";
+    }
+
+
+    var retTxt = '';
+    retTxt += "["+nickName+"]님의 장비" +"\n\n";
+    retTxt += '@'+server+" - "+guild+"\n";
+    retTxt += classs+" ♬ "+"LV. "+level+"\n\n";
+    retTxt += "공격력 : "+power+"\n";
+    retTxt += "HP     : "+hp+"\n";
+    retTxt += "\n☆ [특성]\n";
+    retTxt += "치명 " + stat1 + " 특화 "+stat2+"\n";
+    retTxt += "제압 " + stat3 + " 신속 "+stat4+"\n";
+    retTxt += "인내 " + stat5 + " 숙련 "+stat6+"\n";
+    retTxt += "\n☆ [각인]\n";
+    for(var i = 0; i < ablity.length; i++){
+        retTxt += ablity[i]+"\n";
+    }
+    retTxt += "\n☆ [장비]\n";
+    retTxt += "["+percent1+"] "+equip1+ "\n";
+    retTxt += "["+percent2+"] "+equip2+ "\n";
+    retTxt += "["+percent3+"] "+equip3+ "\n";
+    retTxt += "["+percent4+"] "+equip4+ "\n";
+    retTxt += "["+percent5+"] "+equip5+ "\n";
+    retTxt += "["+percent6+"] "+equip6+ "\n";
+    retTxt += "\n☆ [엘릭서] 총 Lv."+sumLv+"\n";
+    retTxt += elixirTxt;
+    //
+    // var data = data0.select("#character-navigation");
+
+    // var weapon = data0.select("div.self-stretch.flex.gap-1.justify-center.items-center.relative.h-5")[0].text().replace(' : ');
+    // return data0.select("div.flex.gap-6")[0].text();
+    // data0.select("div.rounded-md.overflow-hidden.text-positive-fixed.w-14").text(); 품질
+    // data0.select("div.self-stretch.flex.gap-1.justify-center.items-center.relative.h-5")[0].text(); // (장비종류 강화단계 -> [0] 은 무기
+    // data0.select("div.flex.flex-col.gap-4")[0].text(); -> 아이템 1541.7 전투 60 특화 1271 신속 1155 특성합 2426 공격력 최대 생명력 35096 134063 3 갈증 +12 각인서 3 원한 3 예리한 둔기 3 기습의 대가 3 돌격대장 +12 각인서 1 아드레날린
+    // data0.select("div.flex.flex-col.gap-4")[1].text(); -> 아이템 1541.7 전투 60 특화 1271 신속 1155 특성합 2426 공격력 최대 생명력 35096 134063
+    // data0.select("div.flex.flex-col.gap-3")[01].text(); -> 93 무기 16
+    // return data0.select("div.flex.items-center.gap-2").select("span").text();
+    // var data  =  data0.select("div.flex-grow.space-y-3");
+    
+
+    return retTxt;
+} 
+
+// 분배금 최적가
+function calGold(gold){
+    var party4 = 0.95 * 0.75;
+    var party8 = 0.95 * 0.875;
+
+    var result = '';
+
+    result += '[4인 경매 추천 금액]';
+    result += '\n* 이 금액이 짱 최고이득 : ' + Math.floor(gold * party4 * 0.909);
+    result += '\n* 이 금액이 딱 마지노선 : ' + Math.floor(gold * party4);
+    result += '\n--------------------';
+    result += '\n[8인 경매 추천 금액]';
+    result += '\n* 이 금액이 짱 최고이득 : ' + Math.floor(gold * party8 * 0.909);
+    result += '\n* 이 금액이 딱 마지노선 : ' + Math.floor(gold * party8);
+
+    return result;
+}
+
+// 이미지
 function character_img(nickName, imgUrl){
     txt = nickName;
     size = 40;

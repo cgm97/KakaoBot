@@ -55,7 +55,13 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 } 
             }
             else if(param == '로또'){
-                replier.reply(lotto(sender));
+                let percent = msg.substr(cmdArr[0].length + 1).trim();
+                if(!isNaN(percent)){
+                    replier.reply(lotto(sender, percent));
+                }
+                else {
+                    replier.reply(lotto(sender, 0));         
+                }
             }
         }
     // }
@@ -185,7 +191,7 @@ try{
 }
 
 // 로또
-function lotto(nickName) {
+function lotto(nickName, percent) {
     var data = org.jsoup.Jsoup.connect("https://m.search.naver.com/search.naver?&query=로또번호").get();
 
     let retMsg = '';
@@ -194,52 +200,83 @@ function lotto(nickName) {
     let lottoNum = data.select("#ct > section.sc.mcs_lotto.mcs_common_module._lotto > div.api_subject_bx > div.content_wrap > div > div > div:nth-child(2) > div.win_number_box > div.win_ball");
     let moneyTbody = data.select("#ct > section.sc.mcs_lotto.mcs_common_module._lotto > div.api_subject_bx > div.content_wrap > div > div > div:nth-child(3) > div > table > tbody");
     
-    var lottoBuyNumArray = []; //구매 번호 생성할 array
-    var lottoBuyNumIndex = 0; //구매 번호 배열 순서
-    var lottoBuyNum = ""; //로또번호 생성 숫자
-    while(lottoBuyNumArray.length < 6){
-            lottoBuyNum = Math.floor(Math.random()*(45)) + 1; //1~45 숫자 랜덤 생성
-            if(lottoBuyNumArray.indexOf(lottoBuyNum) == -1){ //구매 번호에 없으면 구매 번호 추가
-                lottoBuyNumArray[lottoBuyNumIndex] = lottoBuyNum;
-                lottoBuyNumIndex++;
-            }
-        }
-
+    
+    
+    
+    
+    
     try{   
+        var lottoBuyNumArray = []; //구매 번호 생성할 array
+        var lottoBuyNum = ''; //로또번호 생성 숫자
         let winNum = lottoNum.select(".winning_number").text();
         let bonusNum = lottoNum.select(".bonus_number").text();
         
         var winNumArray = winNum.split(' ');
         winNumArray.push(bonusNum);
 
+       
+        if(percent == 0){
+
+        }
+        else if(percent == 1){
+            lottoBuyNumArray.push(winNumArray[0]);
+            //lottoBuyNumArray.push(winNumArray[1])
+        }
+        else if(percent == 2){
+            lottoBuyNumArray.push(winNumArray[0]);
+            lottoBuyNumArray.push(winNumArray[1]);
+            //lottoBuyNumArray.push(winNumArray[2])
+        }
+        else if(percent == 3){
+            lottoBuyNumArray.push(winNumArray[0]);
+            lottoBuyNumArray.push(winNumArray[1]);
+            lottoBuyNumArray.push(winNumArray[2]);
+        }
+        else if(percent == 4){
+            lottoBuyNumArray.push(winNumArray[0]);
+            lottoBuyNumArray.push(winNumArray[1]);
+            lottoBuyNumArray.push(winNumArray[2]);
+            lottoBuyNumArray.push(winNumArray[3]);
+        }
+         else {
+            return '/로또 0~4 입력하세요.';
+
+        }
+
+        while(lottoBuyNumArray.length < 6){
+            lottoBuyNum = (Math.floor(Math.random()*(45)) + 1).toString(); //1~45 숫자 랜덤 생성
+            if(!lottoBuyNumArray.includes(lottoBuyNum)){ //구매 번호에 없으면 구매 번호 추가
+                lottoBuyNumArray.push(lottoBuyNum);
+            }
+        }
+
         var pickCnt = 0;
+        var bonusFlag = false;
         //당첨값과 비교
         for(var j=0; j < 7; j++){
             for(var k=0; k <6; k++){
                 if(winNumArray [j] == lottoBuyNumArray[k]){
                     if(j == 6){
                         bonusFlag = true;
+                        
                     }
-                    else{
-                        pickCnt++;
-                    }
+                    pickCnt++;
                 }
             }
         }
 
         if(pickCnt == 6){
-            pickRankMsg  = "🥇등 당첨!!\n";
-            pickRankMsg += "당첨금 : " +moneyTbody.select(".emphasis")[0].text().substr(8);
-        }
-        else if(pickCnt == 5){
             if(bonusFlag){
                 pickRankMsg  = "🥈등 당첨!!\n";
                 pickRankMsg += "당첨금 : " + moneyTbody.select(".emphasis")[1].text().substr(8);
+            } else {
+                pickRankMsg  = "🥇등 당첨!!\n";
+                pickRankMsg += "당첨금 : " +moneyTbody.select(".emphasis")[0].text().substr(8);
             }
-            else{
+        }
+        else if(pickCnt == 5){ 
                 pickRankMsg  = "🥉등 당첨!!\n";
-                pickRankMsg += "당첨금 : " + moneyTbody.select(".emphasis")[2].text().substr(8);
-            }
+                pickRankMsg += "당첨금 : " + moneyTbody.select(".emphasis")[2].text().substr(8);     
         }
         else if(pickCnt == 4){
             pickRankMsg  = "4등 당첨!!\n";
@@ -263,10 +300,25 @@ function lotto(nickName) {
         }
 
         retMsg += "["+bDay+"] 기준\n\n";
+        if(percent == 0){
+            retMsg += "ALL Random VERSION\n\n";
+        } 
+        else if(percent == 1){
+            retMsg += "로또 당첨 1개 확정 VERSION\n\n";
+        }
+        else if(percent == 2){
+            retMsg += "로또 당첨 2개 확정 VERSION\n\n";
+        }
+        else if(percent == 3){
+            retMsg += "로또 당첨 3개 확정 VERSION\n\n";
+        }
+        else if(percent == 4){
+            retMsg += "로또 당첨 4개 확정 VERSION\n\n";
+        }
         retMsg += "만약... "+nickName+"님이 로또를 구매했다면?\n\n";
         retMsg += "------------------------------------\n";
-        retMsg += "저번주 당첨 번호 : " + winNum +" + "+ bonusNum+"\n";
-        retMsg += "구매한 로또 번호 : " + lottoBuyStr +"\n";
+        retMsg += "지난 당첨 번호 : " + winNum +" + "+ bonusNum+"\n";
+        retMsg += "나의 로또 번호 : " + lottoBuyStr +"\n";
         retMsg += "------------------------------------\n\n";
         retMsg += pickRankMsg;
     }catch(e){
