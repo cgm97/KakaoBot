@@ -1,7 +1,10 @@
 const scriptName = "lostark";
 
 importPackage(android.graphics);
-
+const json_job = {'11':'디스트로이어','12':'워로드','13':'버서커','14':'홀리나이트','91':'슬레이어','21':'스트라이커','31':'배틀마스터','32':'인파이터'
+                ,'33':'기공사','34':'창술사','41':'데빌헌터','42':'블래스터','43':'호크아이','44':'스카우터','51':'건슬링어','61':'바드','62':'서머너'
+                ,'63':'아르카나','64':'소서리스','71':'블레이드','72':'데모닉','73':'리퍼','81':'도화가','82':'기상술사'
+                ,'10':'모험가','20':'모험가','30':'모험가','40':'모험가','50':'모험가','60':'모험가','70':'모험가','80':'모험가','90':'모험가'};
 /**
  * (string) room
  * (string) sender
@@ -502,42 +505,50 @@ function getSubUserInfo(nickName) {
     for(var i=0; i<infoJson.characters.length;i++){
         if(infoJson.characters[i].server == 1){
             server1Arr.push(
-                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+                json_job[infoJson.characters[i].job] +"\n"+
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
         else if(infoJson.characters[i].server == 2){
             server2Arr.push(
-                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+                json_job[infoJson.characters[i].job] +"\n"+
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
         else if(infoJson.characters[i].server == 3){
             server3Arr.push(
-                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+                json_job[infoJson.characters[i].job] +"\n"+
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
         else if(infoJson.characters[i].server == 4){
             server4Arr.push(
-                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+                json_job[infoJson.characters[i].job] +"\n"+
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
         else if(infoJson.characters[i].server == 5){
             server5Arr.push(
-                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+                json_job[infoJson.characters[i].job] +"\n"+
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
         else if(infoJson.characters[i].server == 6){
             server6Arr.push(
-                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+                json_job[infoJson.characters[i].job] +"\n"+
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
         else if(infoJson.characters[i].server == 7){
             server7Arr.push(
-                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+                json_job[infoJson.characters[i].job] +"\n"+
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
         else if(infoJson.characters[i].server == 8){
             server8Arr.push(
-                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+                json_job[infoJson.characters[i].job] +"\n"+
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
 
