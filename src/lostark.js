@@ -53,6 +53,47 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     replier.reply('.장비 캐릭명');
                 }        
             }
+            if(param == '떠상'){
+                let serverName = msg.substr(cmdArr[0].length + 1).trim();
+                if(isNaN(serverName)){
+                    replier.reply(getMarketInfo(serverName));
+                }
+                else {
+                    replier.reply('.떠상 서버명');
+                }        
+            }
+            if(param == '내실'){
+                let nickName = msg.substr(cmdArr[0].length + 1).trim();
+                if(isNaN(nickName)){
+                    replier.reply(getCollection(nickName));
+                }
+                else {
+                    replier.reply('.내실 캐릭명');
+                }        
+            }
+            if(param == '모험섬'){
+                var date = new Date();
+                var year = date.getFullYear();
+                var month = ("0" + (1 + date.getMonth())).slice(-2);
+                var day = ("0" + date.getDate()).slice(-2);
+
+                replier.reply(getIsland(year + month + day));     
+            }
+            if(param == '크리스탈'){
+                replier.reply(getCrystal());     
+            }
+            if(param == '전설지도'){
+                replier.reply(getSecretMapPrice());     
+            }
+            if(param == '부캐'){
+                let nickName = msg.substr(cmdArr[0].length + 1).trim();
+                if(isNaN(nickName)){
+                    replier.reply(getSubUserInfo(nickName));
+                }
+                else {
+                    replier.reply('.부캐 캐릭명');
+                }        
+            }
         }
     // }
 
@@ -272,6 +313,293 @@ function calGold(gold){
 
     return result;
 }
+
+function getMarketInfo(serverName){
+    var serverCode = '';
+    if(serverName == '루페온'){
+        serverCode = 1;
+    }
+    else if(serverName == '실리안'){
+        serverCode = 2;
+    }
+    else if(serverName == '아만'){
+        serverCode = 3;
+    }
+    else if(serverName == '아브렐슈드'){
+        serverCode = 4;
+    }
+    else if(serverName == '카단'){
+        serverCode = 5;
+    }
+    else if(serverName == '카마인'){
+        serverCode = 6;
+    }
+    else if(serverName == '카제로스'){
+        serverCode = 7;
+    }
+    else if(serverName == '니나브'){
+        serverCode = 8;
+    }else{
+        return '잘못된 서버명입니다.';
+    }
+
+    let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/merchants?limit=15&server="+serverCode).ignoreContentType(true).get().text());
+    
+    var date = new Date();
+    var currentUtc = date.toISOString().substring(11,13); //현재 시각
+
+    var header = '📢 떠돌이상인 - '+serverName+' ⸜(*◉ ᴗ ◉)⸝\n\n';
+    var result = '';
+
+    var len = info.merchants.length-1;
+    for(var i=0; i < info.merchants.length; i++){
+
+        var created_at = info.merchants[len-i].created_at.substring(11,13); // 떠상시각
+
+        if(created_at == currentUtc){ // 현재 시간과 동일한 떠상 내역만 출력
+            var continent = info.merchants[len-i].continent; // 지역
+            var zone  = info.merchants[len-i].zone; // 마을
+            var card = info.merchants[len-i].card; // 카드
+            var heart = (info.merchants[len-i].rapport > 0) ? '전설호감도':'영웅호감도'; // 카드  
+            var extra = (info.merchants[len-i].extra == null) ? '': info.merchants[len-i].extra+' / ';
+              
+            result += '➡️ '+continent+" / ";
+            result += zone+" / ";
+            result += card+" / ";
+            result += extra;
+            result += heart;
+            result += "\n";
+        }
+
+
+    }
+
+    if(result == ''){
+        result = "현재는 떠돌이 상인이 떠났습니다. \n떠돌이 상인은 매 시 30분에 등장하고 55분에 사라집니다."
+    }
+    return header + result;
+}
+
+function getCollection(nickName){
+    let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/"+nickName+"/collection").ignoreContentType(true).get().text());
+
+    var infoJson = info;
+
+    var island_heart_Arr = infoJson.island_heart;
+    var giant_heart_Arr = infoJson.giant_heart;
+    var ignea_token_Arr = infoJson.ignea_token;
+    var masterpiece_Arr = infoJson.masterpiece;
+    var memory_orgel_Arr = infoJson.memory_orgel;
+    var mokoko_seed_Arr = infoJson.mokoko_seed;
+    var orpheus_star_Arr = infoJson.orpheus_star;
+    var sea_bounty_Arr = infoJson.sea_bounty;
+    var world_tree_leaf_Arr = infoJson.world_tree_leaf;
+
+    var header = '📢 내실 - '+nickName+'  ｡·͜·｡\n\n';
+    var result = '';
+    result += '▶️ ' + island_heart_Arr.name +' ['+ island_heart_Arr.value + ' / ' + island_heart_Arr.max_value + ']\n';
+    result += '▶️ ' + giant_heart_Arr.name +' ['+ giant_heart_Arr.value + ' / ' + giant_heart_Arr.max_value + ']\n';
+    result += '▶️ ' + ignea_token_Arr.name +' ['+ ignea_token_Arr.value + ' / ' + ignea_token_Arr.max_value + ']\n';
+    result += '▶️ ' + masterpiece_Arr.name +' ['+ masterpiece_Arr.value + ' / ' + masterpiece_Arr.max_value + ']\n';
+    result += '▶️ ' + memory_orgel_Arr.name +' ['+ memory_orgel_Arr.value + ' / ' + memory_orgel_Arr.max_value + ']\n';
+    result += '▶️ ' + mokoko_seed_Arr.name +' ['+ mokoko_seed_Arr.value + ' / ' + mokoko_seed_Arr.max_value + ']\n';
+    result += '▶️ ' + orpheus_star_Arr.name +' ['+ orpheus_star_Arr.value + ' / ' + orpheus_star_Arr.max_value + ']\n';
+    result += '▶️ ' + sea_bounty_Arr.name +' ['+ sea_bounty_Arr.value + ' / ' + sea_bounty_Arr.max_value + ']\n';
+    result += '▶️ ' + world_tree_leaf_Arr.name +' ['+ world_tree_leaf_Arr.value + ' / ' + world_tree_leaf_Arr.max_value + ']\n';
+
+    return header + result;
+}
+
+function getIsland(today){
+    let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/calendars/island?date="+today).ignoreContentType(true).get().text());
+
+    var infoJson = info;
+
+
+    var header = '📢 오늘의 모험섬 정보 (ว˙∇˙)ง\n\n';
+    var result = '';
+
+    for(var i=0; i < infoJson.islands.length; i++){
+        if(i == 3){
+            result += '\n------------------------------------\n\n';
+        }
+        var reward = '';
+        if(infoJson.islands[i].reward == 0){
+            reward = '골드'
+        }
+        else if(infoJson.islands[i].reward == 1){
+            reward = '카드'
+        }
+        else if(infoJson.islands[i].reward == 2){
+            reward = '주화'
+        }
+        else if(infoJson.islands[i].reward == 3){
+            reward = '실링'
+        } 
+        else {
+            
+        }
+
+        result += '▶️ ' + infoJson.islands[i].name +' ⎝⍥⎠ ' + reward +'섬 \n';
+
+    }
+
+
+    return header + result;
+}
+
+// 크리스탈 실시간 가격
+function getCrystal(){
+    var info = JSON.parse(org.jsoup.Jsoup.connect("https://loatool.taeu.kr/api/crystal-history/ohlc/1mon").ignoreContentType(true).get().text());
+    
+    price = info[info.length-1].close;
+
+    var result = '📢 실시간 크리스탈 시세 정보 \n\n';
+    result += '100 : ' + price;
+    result += '\n(100 크리스탈 : 골드)'
+    return result;
+}   
+
+// 전설지도 실시간 가격
+function getSecretMapPrice(){
+    var data0 = org.jsoup.Jsoup.connect("https://loatool.taeu.kr/calculator/secret-map").ignoreContentType(true).get();
+    
+    // 전설지도가격
+    var price = data0.select("#app > div > main > div > div > div > div > div.d-flex.flex-row.justify-center > div.main-container.d-flex.flex-row.justify-center > div > div.v-window.v-item-group.theme--light.v-tabs-items > div > div > div:nth-child(1) > div > div:nth-child(1)").text();
+    // 판매수수료
+    var fee = data0.select("#app > div > main > div > div > div > div > div.d-flex.flex-row.justify-center > div.main-container.d-flex.flex-row.justify-center > div > div.v-window.v-item-group.theme--light.v-tabs-items > div > div > div:nth-child(1) > div > div:nth-child(2)").text();
+    // 손인분기점
+    var plus = data0.select("#app > div > main > div > div > div > div > div.d-flex.flex-row.justify-center > div.main-container.d-flex.flex-row.justify-center > div > div.v-window.v-item-group.theme--light.v-tabs-items > div > div > div:nth-child(1) > div > div:nth-child(3)").text();
+    // 입찰적정가
+    var buy = data0.select("#app > div > main > div > div > div > div > div.d-flex.flex-row.justify-center > div.main-container.d-flex.flex-row.justify-center > div > div.v-window.v-item-group.theme--light.v-tabs-items > div > div > div:nth-child(1) > div > div:nth-child(4)").text();
+    // 분배금
+    var n = data0.select("#app > div > main > div > div > div > div > div.d-flex.flex-row.justify-center > div.main-container.d-flex.flex-row.justify-center > div > div.v-window.v-item-group.theme--light.v-tabs-items > div > div > div:nth-child(1) > div > div:nth-child(5)").text();
+    
+    var result = '📢 실시간 전설지도 시세 정보 [볼다이크]\n\n';
+    result += '      '+price + '\n';
+    result += '      '+fee + '\n';
+    result += '▶️ '+plus + '\n';
+    result += '▶️ '+buy + '\n';
+    result += '      '+n + '\n';
+
+    return result;
+}   
+
+function getSubUserInfo(nickName) {
+    let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/"+nickName+"/expedition").ignoreContentType(true).get().text());
+
+    var infoJson = info;
+
+    var server1Arr = []; //루페온
+    var server2Arr = []; //실리안
+    var server3Arr = []; //아만
+    var server4Arr = []; //아브렐슈드
+    var server5Arr = []; //카단
+    var server6Arr = []; //카마인
+    var server7Arr = []; //카제로스
+    var server8Arr = []; //니나브
+
+    for(var i=0; i<infoJson.characters.length;i++){
+        if(infoJson.characters[i].server == 1){
+            server1Arr.push(
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+            )
+        }
+        else if(infoJson.characters[i].server == 2){
+            server2Arr.push(
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+            )
+        }
+        else if(infoJson.characters[i].server == 3){
+            server3Arr.push(
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+            )
+        }
+        else if(infoJson.characters[i].server == 4){
+            server4Arr.push(
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+            )
+        }
+        else if(infoJson.characters[i].server == 5){
+            server5Arr.push(
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+            )
+        }
+        else if(infoJson.characters[i].server == 6){
+            server6Arr.push(
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+            )
+        }
+        else if(infoJson.characters[i].server == 7){
+            server7Arr.push(
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+            )
+        }
+        else if(infoJson.characters[i].server == 8){
+            server8Arr.push(
+                "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")"
+            )
+        }
+
+    }
+
+    var header = '📢 부캐 목록\n';
+    var result = '';
+
+    if(server1Arr.length > 0){
+        result += '\n⊰✿ 루페온\n'
+        for(var i=0; i < server1Arr.length; i++){
+            result += server1Arr[i] + '\n';
+        }
+    }
+    if(server2Arr.length > 0){
+        result += '\n⊰✿ 실리안\n'
+        for(var i=0; i < server2Arr.length; i++){
+            result += server2Arr[i] + '\n';
+        }
+    }
+    if(server3Arr.length > 0){
+        result += '\n⊰✿ 아만\n'
+        for(var i=0; i < server3Arr.length; i++){
+            result += server3Arr[i] + '\n';
+        }
+    }
+    if(server4Arr.length > 0){
+        result += '\n⊰✿ 아브렐슈드\n'
+        for(var i=0; i < server4Arr.length; i++){
+            result += server4Arr[i] + '\n';
+        }
+    }
+    if(server5Arr.length > 0){
+        result += '\n⊰✿ 카단\n'
+        for(var i=0; i < server5Arr.length; i++){
+            result += server5Arr[i] + '\n';
+        }
+    }
+    if(server6Arr.length > 0){
+        result += '\n⊰✿ 카마인\n'
+        for(var i=0; i < server6Arr.length; i++){
+            result += server6Arr[i] + '\n';
+        }
+    }
+    if(server7Arr.length > 0){
+        result += '\n⊰✿ 카제로스\n'
+        for(var i=0; i < server7Arr.length; i++){
+            result += server7Arr[i] + '\n';
+        }
+    }
+    if(server8Arr.length > 0){
+        result += '\n⊰✿ 니나브\n'
+        for(var i=0; i < server8Arr.length; i++){
+            result += server8Arr[i] + '\n';
+        }
+    }
+
+
+    return header + result;
+}
+
+
 
 // 이미지
 function character_img(nickName, imgUrl){
