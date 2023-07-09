@@ -63,6 +63,27 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     replier.reply(lotto(sender, 0));         
                 }
             }
+            else if(param == '번역'){
+                try{
+                    replier.reply(Api.papagoTranslate(cmdArr[1], cmdArr[2], cmdArr[3]));
+                } catch (e){
+                    replier.reply('━━━━ 번역 사용법 ━━━━' + '\u200b'.repeat(500)+'\n\n'+
+                    'ex) /번역 ko en 단어\n\n'+
+                    'ko	    한국어\n'+
+                    'en	    영어\n'+
+                    'ja	    일본어\n'+
+                    'zh-CN	 중국어 간체\n'+
+                    'zh-TW	 중국어 번체\n'+
+                    'vi	    베트남어\n'+
+                    'id	    인도네시아어\n'+
+                    'th	    태국어\n'+
+                    'de	    독일어\n'+
+                    'ru	    러시아어\n'+
+                    'es	    스페인어\n'+
+                    'it	    이탈리아어\n'+
+                    'fr	    프랑스어\n\n'+e.message);
+                }
+            }
         }
     // }
 
