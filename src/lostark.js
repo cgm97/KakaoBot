@@ -1,10 +1,19 @@
 const scriptName = "lostark";
 
 importPackage(android.graphics);
-const json_job = {'11':'디스트로이어','12':'워로드','13':'버서커','14':'홀리나이트','91':'슬레이어','21':'스트라이커','31':'배틀마스터','32':'인파이터'
+
+// 직업코드
+const JOB_CODE = {'11':'디스트로이어','12':'워로드','13':'버서커','14':'홀리나이트','91':'슬레이어','21':'스트라이커','31':'배틀마스터','32':'인파이터'
                 ,'33':'기공사','34':'창술사','41':'데빌헌터','42':'블래스터','43':'호크아이','44':'스카우터','51':'건슬링어','61':'바드','62':'서머너'
                 ,'63':'아르카나','64':'소서리스','71':'블레이드','72':'데모닉','73':'리퍼','81':'도화가','82':'기상술사'
                 ,'10':'모험가','20':'모험가','30':'모험가','40':'모험가','50':'모험가','60':'모험가','70':'모험가','80':'모험가','90':'모험가'};
+// 서버코드
+const SERVER_CODE = {'1':'루페온','2':'실리안','3':'아만','4':'아브렐슈드','5':'카단','6':'카마인','7':'카제로스','8':'니나브'
+                    ,'루페온':'1','실리안':'2','아만':'3','아브렐슈드':'4','카단':'5','카마인':'6','카제로스':'7','니나브':'8'
+                    };
+// LV별 획득골드량
+const LV_GOLD = {'1620':35000,'1600':29500,'1580':22500,'1560':18000,'1550':17500,'1540':17000,'1520':12400,'1500':9900,'1490':8400};
+
 /**
  * (string) room
  * (string) sender
@@ -95,6 +104,15 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 }
                 else {
                     replier.reply('.부캐 캐릭명');
+                }        
+            }
+            if(param == '주급'){
+                let nickName = msg.substr(cmdArr[0].length + 1).trim();
+                if(isNaN(nickName)){
+                    replier.reply(getCalWeekGold(nickName));
+                }
+                else {
+                    replier.reply('.주급 캐릭명');
                 }        
             }
         }
@@ -318,35 +336,11 @@ function calGold(gold){
 }
 
 function getMarketInfo(serverName){
-    var serverCode = '';
-    if(serverName == '루페온'){
-        serverCode = 1;
-    }
-    else if(serverName == '실리안'){
-        serverCode = 2;
-    }
-    else if(serverName == '아만'){
-        serverCode = 3;
-    }
-    else if(serverName == '아브렐슈드'){
-        serverCode = 4;
-    }
-    else if(serverName == '카단'){
-        serverCode = 5;
-    }
-    else if(serverName == '카마인'){
-        serverCode = 6;
-    }
-    else if(serverName == '카제로스'){
-        serverCode = 7;
-    }
-    else if(serverName == '니나브'){
-        serverCode = 8;
-    }else{
+
+    if(SERVER_CODE[serverName] == undefined){
         return '잘못된 서버명입니다.';
     }
-
-    let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/merchants?limit=15&server="+serverCode).ignoreContentType(true).get().text());
+    let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/merchants?limit=15&server="+SERVER_CODE[serverName]).ignoreContentType(true).get().text());
     
     var date = new Date();
     var currentUtc = date.toISOString().substring(11,13); //현재 시각
@@ -503,51 +497,51 @@ function getSubUserInfo(nickName) {
     var server8Arr = []; //니나브
 
     for(var i=0; i<infoJson.characters.length;i++){
-        if(infoJson.characters[i].server == 1){
+        if(infoJson.characters[i].server == SERVER_CODE["루페온"]){
             server1Arr.push(
-                json_job[infoJson.characters[i].job] +"\n"+
+                JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == 2){
+        else if(infoJson.characters[i].server == SERVER_CODE["실리안"]){
             server2Arr.push(
-                json_job[infoJson.characters[i].job] +"\n"+
+                JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == 3){
+        else if(infoJson.characters[i].server == SERVER_CODE["아만"]){
             server3Arr.push(
-                json_job[infoJson.characters[i].job] +"\n"+
+                JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == 4){
+        else if(infoJson.characters[i].server == SERVER_CODE["아브렐슈드"]){
             server4Arr.push(
-                json_job[infoJson.characters[i].job] +"\n"+
+                JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == 5){
+        else if(infoJson.characters[i].server == SERVER_CODE["카단"]){
             server5Arr.push(
-                json_job[infoJson.characters[i].job] +"\n"+
+                JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == 6){
+        else if(infoJson.characters[i].server == SERVER_CODE["카마인"]){
             server6Arr.push(
-                json_job[infoJson.characters[i].job] +"\n"+
+                JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == 7){
+        else if(infoJson.characters[i].server == SERVER_CODE["카제로스"]){
             server7Arr.push(
-                json_job[infoJson.characters[i].job] +"\n"+
+                JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == 8){
+        else if(infoJson.characters[i].server == SERVER_CODE["니나브"]){
             server8Arr.push(
-                json_job[infoJson.characters[i].job] +"\n"+
+                JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
@@ -560,57 +554,139 @@ function getSubUserInfo(nickName) {
     if(server1Arr.length > 0){
         result += '\n⊰✿ 루페온\n'
         for(var i=0; i < server1Arr.length; i++){
-            result += server1Arr[i] + '\n';
+            result += server1Arr[i];
         }
     }
     if(server2Arr.length > 0){
         result += '\n⊰✿ 실리안\n'
         for(var i=0; i < server2Arr.length; i++){
-            result += server2Arr[i] + '\n';
+            result += server2Arr[i];
         }
     }
     if(server3Arr.length > 0){
         result += '\n⊰✿ 아만\n'
         for(var i=0; i < server3Arr.length; i++){
-            result += server3Arr[i] + '\n';
+            result += server3Arr[i];
         }
     }
     if(server4Arr.length > 0){
         result += '\n⊰✿ 아브렐슈드\n'
         for(var i=0; i < server4Arr.length; i++){
-            result += server4Arr[i] + '\n';
+            result += server4Arr[i];
         }
     }
     if(server5Arr.length > 0){
         result += '\n⊰✿ 카단\n'
         for(var i=0; i < server5Arr.length; i++){
-            result += server5Arr[i] + '\n';
+            result += server5Arr[i];
         }
     }
     if(server6Arr.length > 0){
         result += '\n⊰✿ 카마인\n'
         for(var i=0; i < server6Arr.length; i++){
-            result += server6Arr[i] + '\n';
+            result += server6Arr[i] ;
         }
     }
     if(server7Arr.length > 0){
         result += '\n⊰✿ 카제로스\n'
         for(var i=0; i < server7Arr.length; i++){
-            result += server7Arr[i] + '\n';
+            result += server7Arr[i];
         }
     }
     if(server8Arr.length > 0){
         result += '\n⊰✿ 니나브\n'
         for(var i=0; i < server8Arr.length; i++){
-            result += server8Arr[i] + '\n';
+            result += server8Arr[i];
         }
     }
-
 
     return header + result;
 }
 
+// 주급 계산
+function getCalWeekGold(nickName){
+    let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/"+nickName+"/expedition").ignoreContentType(true).get().text());
 
+    var infoJson = info;    
+
+    var server = 0;
+    var lvList = []; // 검색 캐릭과 같은 서버 원정대캐릭 레벨 저장 리스트
+
+    // 검색 캐릭터 서버 찾기
+    for(var i=0; i<infoJson.characters.length;i++){
+        if(infoJson.characters[i].name == nickName){
+            server = infoJson.characters[i].server;
+        }  
+    }
+
+    // 같은 서버 캐릭 정보 -> LV 찾기
+    for(var i=0; i<infoJson.characters.length;i++){
+        if(infoJson.characters[i].server == server){
+            lvList.push(Math.floor(infoJson.characters[i].max_item_level));
+        }  
+    }
+
+    // 레벨 높은 순 -> 가장 많은 주급 계산을 하기 위해
+    lvList = lvList.sort(function(a,b){ // 내림차순
+        return b - a;
+    });
+    
+
+    // 주급 계산
+    var limitCnt = 0; // 주간골드량 제한캐릭 수 (현재 6개)
+    var totalSum = 0; // ㅗㅇ 주급
+    for(var i=0; i < lvList.length; i++){
+
+        if(lvList[i] >= 1620 ){
+            totalSum += LV_GOLD["1620"];
+        }
+        else if(lvList[i] >= 1600 && lvList[i] < 1620 ){
+            totalSum += LV_GOLD["1600"];
+        }
+        else if(lvList[i] >= 1580 && lvList[i] < 1600 ){
+            totalSum += LV_GOLD["1580"];
+        }
+        else if(lvList[i] >= 1560 && lvList[i] < 1580 ){
+            totalSum += LV_GOLD["1560"];
+        }
+        else if(lvList[i] >= 1550 && lvList[i] < 1560 ){
+            totalSum += LV_GOLD["1550"];
+        }
+        else if(lvList[i] >= 1540 && lvList[i] < 1550 ){
+            totalSum += LV_GOLD["1540"];
+        }
+        else if(lvList[i] >= 1520 && lvList[i] < 1540 ){
+            totalSum += LV_GOLD["1520"];
+        }
+        else if(lvList[i] >= 1500 && lvList[i] < 1520 ){
+            totalSum += LV_GOLD["1500"];
+        }
+        else if(lvList[i] >= 1490 && lvList[i] < 1500 ){
+            totalSum += LV_GOLD["1490"];
+        }
+        else { // 1490 미만은 계산안함
+            totalSum += 0;
+        }
+        
+        limitCnt += 1;
+
+        if(limitCnt == 6){
+            break;
+        }
+    }
+    
+    var header = '📢 '+SERVER_CODE[server]+' [' + nickName+ ']님 주급 정보 \n\n';
+    var result = '(상위 6캐릭)\n총 ' + set_comma(totalSum)+" G";
+    result += '\n\n※1490미만 캐릭터 계산 X'
+    return header + result;
+}
+
+// 천단위 콤마 함수
+function set_comma(price) {
+
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+}
 
 // 이미지
 function character_img(nickName, imgUrl){
