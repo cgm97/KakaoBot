@@ -9,11 +9,11 @@ const prefix='/';
 //방 설정 [ ] 안에 사용할 방 이름을 적어주세요
 const _room=['빈틈 테스트','로스트아크 빈틈'];
 //레벨 칭호 설정
-const lv_tag=['아이언','🥉브론즈','🥈실버','🥇골드','👑챔피언'];
+const lv_tag=['아이언','🥉브론즈','🥈실버','🥇골드','💠풀레티넘','💎다이아','👑마스터'];
 //칭호별 필요 경험치 설정(숫자로 적어주세요)(칭호 개수와 같아야 오류가 안납니다)
-const lv_exp=[0,100,200,500,1000];
+const lv_exp=[0,100,200,400,600,800,1000];
 //획득 경험치 [일반 메시지, 이모티콘 , 사진, 동영상]
-const get_exp=[1,3,3,4];
+const get_exp=[1,2,5,10];
 
 function onStartCompile(){
   
@@ -162,7 +162,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
     //채팅레벨정보 열람 
     if(msg=='레벨'){
       replier.reply(
-      "["+user+'님의 프로필]\n'+
+      "["+user+'님의 프로필]\n\n'+
       "레벨 : "+lv_tag[profile.lv]+'('+profile.lv+')['+profile.exp+'exp]\n'+
       '|'+ makeBar(profile.exp,(profile.lv == lv_tag.length-1 ? profile.exp : lv_exp[profile.lv+1]),10)+(profile.lv==lv_tag.length-1 ? " (최고레벨)" : " ("+String(profile.exp)+"/"+String(lv_exp[profile.lv+1])+")")+'\n>>'+
       (profile.lv == lv_tag.length-1 ? "마스터에 도달하셨습니다" : String(lv_tag[profile.lv+1])+'까지 앞으로 '+String(lv_exp[profile.lv+1]-profile.exp)+"exp")
@@ -174,8 +174,8 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
   
   //랭킹
   if(msg=='랭킹'){
-    Data.sort((a, b)=> b.exp-a.exp);
-    const rank=Data.sort((a,b)=>b.lv-a.lv).map((v,i)=>(i+1)+"위 : "+v.name+" Lv "+v.lv+" chat("+v.chat_cnt+"개)");
+    Data.sort((a, b)=> b.lv-a.lv);
+    const rank=Data.sort((a,b)=>b.chat_cnt-a.chat_cnt).map((v,i)=>(i+1)+"위 : "+v.name+" Lv "+v.lv);
     
     var _return="[ 채팅 랭킹 ]\n\n";
     for(var i in rank){
@@ -192,7 +192,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
   
   if(msg=="도움말"){
     replier.reply(
-    "[ 채팅시스템 이용 도움말 ]" + "\u200b".repeat(501)+"\n"+
+    "[ 채팅시스템 이용 도움말 ]" + "\u200b".repeat(501)+"\n\n"+
     // prefix+"등록\n"+"채팅 레벨링을 시작하기위해 정보를 등록하게 해줍니다.\n\n"+
     // prefix+"계정복구\n"+"프로필 오류 발생 시 인증번호를 통해 계정을 복구 합니다.\n\n"+
     prefix+"레벨\n"+"자신의 채팅레벨 정보를 보여줍니다.\n\n"+
