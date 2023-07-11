@@ -38,7 +38,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     replier.reply(getUserInfo(nickName));
                 }
                 else {
-                    replier.reply('.정보 캐릭명');
+                    replier.reply('잘못된 명령어 입니다.');
                 }              
             }
             if(param == '보석'){
@@ -47,7 +47,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     replier.reply(getUserGem(nickName));
                 }
                 else {
-                    replier.reply('.보석 캐릭명');
+                    replier.reply('잘못된 명령어 입니다.');
                 }              
             }
             if(param == '분배금'){
@@ -55,23 +55,26 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 if(!isNaN(gold)){
                     replier.reply(calGold(gold));
                 }
+                else{
+                    replier.reply('잘못된 명령어 입니다.');
+                }
             }
             if(param == '장비'){
                 let nickName = msg.substr(cmdArr[0].length + 1).trim();
                 if(isNaN(nickName)){
                     replier.reply(getUseritem(nickName));
                 }
-                else {
-                    replier.reply('.장비 캐릭명');
-                }        
+                else{
+                    replier.reply('잘못된 명령어 입니다.');
+                }      
             }
             if(param == '떠상'){
                 let serverName = msg.substr(cmdArr[0].length + 1).trim();
                 if(isNaN(serverName)){
-                    replier.reply(getMarketInfo(serverName));
+                    replier.reply(getMarketInfo(serverName));        
                 }
-                else {
-                    replier.reply('.떠상 서버명');
+                else{
+                    replier.reply('잘못된 명령어 입니다.');
                 }        
             }
             if(param == '내실'){
@@ -79,8 +82,8 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 if(isNaN(nickName)){
                     replier.reply(getCollection(nickName));
                 }
-                else {
-                    replier.reply('.내실 캐릭명');
+                else{
+                    replier.reply('잘못된 명령어 입니다.');
                 }        
             }
             if(param == '모험섬'){
@@ -102,28 +105,34 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 if(isNaN(nickName)){
                     replier.reply(getSubUserInfo(nickName));
                 }
-                else {
-                    replier.reply('.부캐 캐릭명');
-                }        
+                else{
+                    replier.reply('잘못된 명령어 입니다.');
+                }         
             }
             if(param == '주급'){
                 let nickName = msg.substr(cmdArr[0].length + 1).trim();
                 if(isNaN(nickName)){
                     replier.reply(getCalWeekGold(nickName));
                 }
-                else {
-                    replier.reply('.주급 캐릭명');
-                }        
+                else{
+                    replier.reply('잘못된 명령어 입니다.');
+                }       
             }
         }
     // }
+    }
 
-}
+
 
 // 유저 정보 조회
 function getUserInfo(nickName) {
     var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
     var data = data0.select("div.profile-ingame");
+
+    if('캐릭터명을 확인해주세요.' == data.select("div > span:nth-child(2)").text()){
+        return '존재하지않는 캐릭터입니다.';
+    }
+
     var lv = data.select("div.level-info").select("span");
     var lv_ex = lv.get(1).ownText();
     var lv_ba = lv.get(3).ownText();
@@ -159,6 +168,10 @@ function getUserGem(nickName) {
     var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
     var data = data0.select("div.profile-ingame");
     
+    if('캐릭터명을 확인해주세요.' == data.select("div > span:nth-child(2)").text()){
+        return '존재하지않는 캐릭터입니다.';
+    }
+
     // 보석 레벨
     var gemLvList = data.select("#profile-jewel > div > div.jewel__wrap").select("span");
     var gemLvInfo = gemLvList.select(".jewel_level");
@@ -212,8 +225,12 @@ function getUserGem(nickName) {
 function getUseritem(nickName) {
     var data0 = org.jsoup.Jsoup.connect("https://api.losonsil.com/search/" + nickName).ignoreContentType(true).get().text();
     var data1 = org.jsoup.Jsoup.connect("https://iloa.gg/character/" + nickName).ignoreContentType(true).get();
-  
+
     var infoJson = JSON.parse(data0);
+
+    if(infoJson.code == 'error'){
+        return '존재하지않는 캐릭터입니다.';
+    }
 
     // 각인
     var ablity = infoJson.ablity;
@@ -377,10 +394,22 @@ function getMarketInfo(serverName){
     return header + result;
 }
 
+// 내실 정보
 function getCollection(nickName){
-    let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/"+nickName+"/collection").ignoreContentType(true).get().text());
+
+    let info;
+    try{
+        info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/"+nickName+"/collection").ignoreContentType(true).get().text());
+    }
+    catch(e){
+        return '존재하지않는 캐릭터입니다.';
+    }
 
     var infoJson = info;
+
+    if(infoJson.code == 404000){
+        return infoJson.errors.msg;
+    }
 
     var island_heart_Arr = infoJson.island_heart;
     var giant_heart_Arr = infoJson.giant_heart;
@@ -407,6 +436,7 @@ function getCollection(nickName){
     return header + result;
 }
 
+// 금일 모험섬 정보
 function getIsland(today){
     let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/calendars/island?date="+today).ignoreContentType(true).get().text());
 
@@ -482,8 +512,16 @@ function getSecretMapPrice(){
     return result;
 }   
 
+// 부캐 목록 조회
 function getSubUserInfo(nickName) {
-    let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/"+nickName+"/expedition").ignoreContentType(true).get().text());
+
+    let info;
+    try{
+        info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/"+nickName+"/expedition").ignoreContentType(true).get().text());
+    }
+    catch(e){
+        return '존재하지않는 캐릭터입니다.';
+    }
 
     var infoJson = info;
 
@@ -605,9 +643,16 @@ function getSubUserInfo(nickName) {
 
 // 주급 계산
 function getCalWeekGold(nickName){
-    let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/"+nickName+"/expedition").ignoreContentType(true).get().text());
 
-    var infoJson = info;    
+    let info;
+    try{
+        info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/"+nickName+"/expedition").ignoreContentType(true).get().text());
+    }
+    catch(e){
+        return '존재하지않는 캐릭터입니다.';
+    }
+
+    var infoJson = info;
 
     var server = 0;
     var lvList = []; // 검색 캐릭과 같은 서버 원정대캐릭 레벨 저장 리스트
