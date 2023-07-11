@@ -1,19 +1,8 @@
 const scriptName = "lostark";
 
-//importPackage(android.graphics);
-
-// 직업코드
-const JOB_CODE = {'11':'디스트로이어','12':'워로드','13':'버서커','14':'홀리나이트','91':'슬레이어','21':'스트라이커','31':'배틀마스터','32':'인파이터'
-                ,'33':'기공사','34':'창술사','41':'데빌헌터','42':'블래스터','43':'호크아이','44':'스카우터','51':'건슬링어','61':'바드','62':'서머너'
-                ,'63':'아르카나','64':'소서리스','71':'블레이드','72':'데모닉','73':'리퍼','81':'도화가','82':'기상술사'
-                ,'10':'모험가','20':'모험가','30':'모험가','40':'모험가','50':'모험가','60':'모험가','70':'모험가','80':'모험가','90':'모험가'};
-// 서버코드
-const SERVER_CODE = {'1':'루페온','2':'실리안','3':'아만','4':'아브렐슈드','5':'카단','6':'카마인','7':'카제로스','8':'니나브'
-                    ,'루페온':'1','실리안':'2','아만':'3','아브렐슈드':'4','카단':'5','카마인':'6','카제로스':'7','니나브':'8'
-                    };
-// LV별 획득골드량
-const LV_GOLD = {'1620':35000,'1600':29500,'1580':22500,'1560':18000,'1550':17500,'1540':17000,'1520':12400,'1500':9900,'1490':8400};
-
+// 이미지 생성 function
+// Func.img(이미지URL, 제목, 설명);
+const Func = require('function');
 /**
  * (string) room
  * (string) sender
@@ -64,7 +53,9 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 if(isNaN(nickName)){
                     replier.reply(getUseritem(nickName));
                     replier.reply('아바타 이미지 생성중...');
-                    replier.reply(character_img(nickName));
+                    var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
+                    var imgUrl = data0.select(".profile-equipment__character img").attr("src");
+                    replier.reply(Func.makeImg(imgUrl,nickName,'아바타'));         
                 }
                 else{
                     replier.reply('잘못된 명령어 입니다.');
@@ -313,23 +304,9 @@ function getUseritem(nickName) {
     retTxt += "["+percent4+"] "+equip4+ "\n";
     retTxt += "["+percent5+"] "+equip5+ "\n";
     retTxt += "["+percent6+"] "+equip6+ "\n";
-    // retTxt += "\n☆ [카드]\n";
-    // retTxt += cardEffect+ "\n";
+
     retTxt += "\n☆ [엘릭서] 총 Lv."+sumLv+"\n";
     retTxt += elixirTxt;
-
-    //
-    // var data = data0.select("#character-navigation");
-
-    // var weapon = data0.select("div.self-stretch.flex.gap-1.justify-center.items-center.relative.h-5")[0].text().replace(' : ');
-    // return data0.select("div.flex.gap-6")[0].text();
-    // data0.select("div.rounded-md.overflow-hidden.text-positive-fixed.w-14").text(); 품질
-    // data0.select("div.self-stretch.flex.gap-1.justify-center.items-center.relative.h-5")[0].text(); // (장비종류 강화단계 -> [0] 은 무기
-    // data0.select("div.flex.flex-col.gap-4")[0].text(); -> 아이템 1541.7 전투 60 특화 1271 신속 1155 특성합 2426 공격력 최대 생명력 35096 134063 3 갈증 +12 각인서 3 원한 3 예리한 둔기 3 기습의 대가 3 돌격대장 +12 각인서 1 아드레날린
-    // data0.select("div.flex.flex-col.gap-4")[1].text(); -> 아이템 1541.7 전투 60 특화 1271 신속 1155 특성합 2426 공격력 최대 생명력 35096 134063
-    // data0.select("div.flex.flex-col.gap-3")[01].text(); -> 93 무기 16
-    // return data0.select("div.flex.items-center.gap-2").select("span").text();
-    // var data  =  data0.select("div.flex-grow.space-y-3");
 
     return retTxt;
 } 
@@ -354,10 +331,10 @@ function calGold(gold){
 
 function getMarketInfo(serverName){
 
-    if(SERVER_CODE[serverName] == undefined){
+    if(Func.SERVER_CODE[serverName] == undefined){
         return '잘못된 서버명입니다.';
     }
-    let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/merchants?limit=15&server="+SERVER_CODE[serverName]).ignoreContentType(true).get().text());
+    let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/merchants?limit=15&server="+Func.SERVER_CODE[serverName]).ignoreContentType(true).get().text());
     
     var date = new Date();
     var currentUtc = date.toISOString().substring(11,13); //현재 시각
@@ -535,51 +512,51 @@ function getSubUserInfo(nickName) {
     var server8Arr = []; //니나브
 
     for(var i=0; i<infoJson.characters.length;i++){
-        if(infoJson.characters[i].server == SERVER_CODE["루페온"]){
+        if(infoJson.characters[i].server == Func.SERVER_CODE["루페온"]){
             server1Arr.push(
-                JOB_CODE[infoJson.characters[i].job] +"\n"+
+                Func.JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == SERVER_CODE["실리안"]){
+        else if(infoJson.characters[i].server == Func.SERVER_CODE["실리안"]){
             server2Arr.push(
-                JOB_CODE[infoJson.characters[i].job] +"\n"+
+                Func.JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == SERVER_CODE["아만"]){
+        else if(infoJson.characters[i].server == Func.SERVER_CODE["아만"]){
             server3Arr.push(
-                JOB_CODE[infoJson.characters[i].job] +"\n"+
+                Func.JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == SERVER_CODE["아브렐슈드"]){
+        else if(infoJson.characters[i].server == Func.SERVER_CODE["아브렐슈드"]){
             server4Arr.push(
-                JOB_CODE[infoJson.characters[i].job] +"\n"+
+                Func.JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == SERVER_CODE["카단"]){
+        else if(infoJson.characters[i].server == Func.SERVER_CODE["카단"]){
             server5Arr.push(
-                JOB_CODE[infoJson.characters[i].job] +"\n"+
+                Func.JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == SERVER_CODE["카마인"]){
+        else if(infoJson.characters[i].server == Func.SERVER_CODE["카마인"]){
             server6Arr.push(
-                JOB_CODE[infoJson.characters[i].job] +"\n"+
+                Func.JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == SERVER_CODE["카제로스"]){
+        else if(infoJson.characters[i].server == Func.SERVER_CODE["카제로스"]){
             server7Arr.push(
-                JOB_CODE[infoJson.characters[i].job] +"\n"+
+                Func.JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
-        else if(infoJson.characters[i].server == SERVER_CODE["니나브"]){
+        else if(infoJson.characters[i].server == Func.SERVER_CODE["니나브"]){
             server8Arr.push(
-                JOB_CODE[infoJson.characters[i].job] +"\n"+
+                Func.JOB_CODE[infoJson.characters[i].job] +"\n"+
                 "["+infoJson.characters[i].level+"] "+ infoJson.characters[i].name + " (Lv."+infoJson.characters[i].max_item_level+")\n"
             )
         }
@@ -683,31 +660,31 @@ function getCalWeekGold(nickName){
     for(var i=0; i < lvList.length; i++){
 
         if(lvList[i] >= 1620 ){
-            totalSum += LV_GOLD["1620"];
+            totalSum += Func.LV_GOLD["1620"];
         }
         else if(lvList[i] >= 1600 && lvList[i] < 1620 ){
-            totalSum += LV_GOLD["1600"];
+            totalSum += Func.LV_GOLD["1600"];
         }
         else if(lvList[i] >= 1580 && lvList[i] < 1600 ){
-            totalSum += LV_GOLD["1580"];
+            totalSum += Func.LV_GOLD["1580"];
         }
         else if(lvList[i] >= 1560 && lvList[i] < 1580 ){
-            totalSum += LV_GOLD["1560"];
+            totalSum += Func.LV_GOLD["1560"];
         }
         else if(lvList[i] >= 1550 && lvList[i] < 1560 ){
-            totalSum += LV_GOLD["1550"];
+            totalSum += Func.LV_GOLD["1550"];
         }
         else if(lvList[i] >= 1540 && lvList[i] < 1550 ){
-            totalSum += LV_GOLD["1540"];
+            totalSum += Func.LV_GOLD["1540"];
         }
         else if(lvList[i] >= 1520 && lvList[i] < 1540 ){
-            totalSum += LV_GOLD["1520"];
+            totalSum += Func.LV_GOLD["1520"];
         }
         else if(lvList[i] >= 1500 && lvList[i] < 1520 ){
-            totalSum += LV_GOLD["1500"];
+            totalSum += Func.LV_GOLD["1500"];
         }
         else if(lvList[i] >= 1490 && lvList[i] < 1500 ){
-            totalSum += LV_GOLD["1490"];
+            totalSum += Func.LV_GOLD["1490"];
         }
         else { // 1490 미만은 계산안함
             totalSum += 0;
@@ -720,7 +697,7 @@ function getCalWeekGold(nickName){
         }
     }
     
-    var header = '📢 '+SERVER_CODE[server]+' [' + nickName+ ']님 주급 정보 \n\n';
+    var header = '📢 '+Func.SERVER_CODE[server]+' [' + nickName+ ']님 주급 정보 \n\n';
     var result = '(상위 6캐릭)\n총 ' + set_comma(totalSum)+" G";
     result += '\n\n※1490미만 캐릭터 계산 X'
     return header + result;
@@ -781,31 +758,6 @@ function set_comma(price) {
     
 //     return 'https://a.cgm97.workers.dev/e/'+res;
 // }
-
-// 이미지 _ molya
-function character_img(nickName){
-
-    var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
-    var imgUrl = data0.select(".profile-equipment__character img").attr("src");
-
-    var r = org.jsoup.Jsoup.connect('http://api.molya.kr/v1/image/byUrl')
-    .header('x-api-key', 'ec2b3cc4-53e9-4343-874b-26807c75a98d')
-    .header('content-type', 'application/json')
-    .requestBody(JSON.stringify({
-        image: imgUrl,
-        title: nickName,
-        description: '아바타',
-        useOriginal: true
-    }))
-    .ignoreHttpErrors(true)
-    .ignoreContentType(true)
-    .post()
-    .text()
-
-    var retImg = JSON.parse(r);
-    
-    return retImg.data.url;
-}
 
 //아래 4개의 메소드는 액티비티 화면을 수정할때 사용됩니다.
 function onCreate(savedInstanceState, activity) {
