@@ -24,9 +24,9 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
 
             retMsg += '\n\n🔘🔘🔘 LostArk 명령어 모음 🔘🔘🔘';
             retMsg += '\n╔══════════════════╗';
-            retMsg += '\n※ 💬 명령어 [.]';
-            retMsg += '\n.정보 [닉네임] : 입력된 캐릭터의 기본정보를 조회합니다.';
-            retMsg += '\n.장비 [닉네임] : 입력된 캐릭터의 장비정보를 조회합니다.';
+            retMsg += '\n※ 💬 명령어 [ . ]';
+            retMsg += '\n.정보 [닉네임] : 입력된 캐릭터의 기본정보 및 장비를 조회합니다.';
+            // retMsg += '\n.장비 [닉네임] : 입력된 캐릭터의 장비정보를 조회합니다.';
             retMsg += '\n.부캐 [닉네임] : 입력된 캐릭터의 부캐릭터 정보들을 조회합니다.';
             retMsg += '\n.보석 [닉네임] : 입력된 캐릭터의 보석정보를 조회합니다.';
             retMsg += '\n.주급 [닉네임] : 입력된 캐릭터의 서버에 해당되는 상위 6개 캐릭터의 주간 골드를 합산하여 보여줍니다.';
@@ -39,7 +39,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
 
             retMsg += '\n\n🔘🔘🔘 유틸리티 명령어 모음 🔘🔘🔘';
             retMsg += '\n╔══════════════════╗';
-            retMsg += '\n※ 💬 명령어 [/]';
+            retMsg += '\n※ 💬 명령어 [ / ]';
             retMsg += '\n/날씨 [지역명] : 입력된 지역의 현재 날씨정보를 조회합니다.';
             retMsg += '\n/내일날씨 [지역명] : 입력된 지역의 내일 오전 오후 날씨정보를 조회합니다.';
             retMsg += '\n/출석 : 금일 출석체크를 진행합니다.';
