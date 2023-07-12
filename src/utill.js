@@ -67,7 +67,8 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 try{
                     replier.reply(Api.papagoTranslate(cmdArr[1], cmdArr[2], cmdArr[3]));
                 } catch (e){
-                    replier.reply('━━━━ 번역 사용법 ━━━━' + '\u200b'.repeat(500)+'\n\n'+
+                    replier.reply('🔘🔘🔘 번역 명령어 설명 🔘🔘🔘' + '\u200b'.repeat(500)+'\n\n'+
+                    '╔══════════════════╗'+
                     'ex) /번역 ko en 단어\n\n'+
                     'ko	    한국어\n'+
                     'en	    영어\n'+
@@ -81,7 +82,9 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     'ru	    러시아어\n'+
                     'es	    스페인어\n'+
                     'it	    이탈리아어\n'+
-                    'fr	    프랑스어\n\n'+e.message);
+                    'fr	    프랑스어\n'+
+                    '╚══════════════════╝\n'+e.message
+                    );
                 }
             }
         }

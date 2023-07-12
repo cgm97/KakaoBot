@@ -78,11 +78,11 @@ function checkList(room) {
 function rank(num){
     switch(num){
       case 1 :
-      return '[🥇]1위';
+      return '[🥇]';
       case 2 :
-      return '[🥈]2위';
+      return '[🥈]';
       case 3 : 
-      return '[🥉]3위'; 
+      return '[🥉]'; 
     }
     return num + '위';
 

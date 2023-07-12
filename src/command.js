@@ -26,6 +26,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             retMsg += '\n╔══════════════════╗';
             retMsg += '\n※ 💬 명령어 [ . ]';
             retMsg += '\n.정보 [닉네임] : 입력된 캐릭터의 기본정보 및 장비를 조회합니다.';
+            retMsg += '\n.아바타 [닉네임] : 입력된 캐릭터의 아바타 이미지를 조회합니다.';
             // retMsg += '\n.장비 [닉네임] : 입력된 캐릭터의 장비정보를 조회합니다.';
             retMsg += '\n.부캐 [닉네임] : 입력된 캐릭터의 부캐릭터 정보들을 조회합니다.';
             retMsg += '\n.보석 [닉네임] : 입력된 캐릭터의 보석정보를 조회합니다.';
@@ -47,6 +48,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             retMsg += '\n/띠별운세 [띠] : 입력된 띠의 오늘 운세를 조회합니다.';
             retMsg += '\n/별자리운세 [별자리] : 입력된 별자리의 오늘 운새를 조회합니다.';
             retMsg += '\n/로또 [0~4] : 최근 회차 로또 번호 정보를 토대로 나의 로또당첨 여부를 조회합니다.';
+            retMsg += '\n/번역 : 입력된 글씨를 원하는 언어로 번역 해준다. (PAPAGO) _ 번역 도움말 SHOW';
             retMsg += '\n╚══════════════════╝';
 
             retMsg += '\n\n🔘🔘🔘 LostArk 이모티콘 명령어 모음 🔘🔘🔘';

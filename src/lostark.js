@@ -51,7 +51,15 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             if(param == '정보'){
                 let nickName = msg.substr(cmdArr[0].length + 1).trim();
                 if(isNaN(nickName)){
-                    replier.reply(getUseritem(nickName));
+                    replier.reply(getUseritem(nickName));       
+                }
+                else{
+                    replier.reply('잘못된 명령어 입니다.');
+                }      
+            }
+            if(param == '아바타'){
+                let nickName = msg.substr(cmdArr[0].length + 1).trim();
+                if(isNaN(nickName)){
                     replier.reply('아바타 이미지 생성중...');
                     var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
                     var imgUrl = data0.select(".profile-equipment__character img").attr("src");
@@ -271,16 +279,22 @@ function getUseritem(nickName) {
     // 엘릭서 정보
     var elixir = data1.select(".flex.gap-4 div").select(".flex.items-center.space-x-2.font-medium");
     
-    var elixirTxt = ''; // 엘릭서 담긴 정보
+    var elixirTxt = "\n☆ [엘릭서] 총 Lv."+sumLv+"\n"; // 엘릭서 담긴 정보
     var sumLv = 0;
-    for(var i = 0; i < elixir.length ;i++){
-        var elixir_option = elixir[i].select(".flex-1").text();
-        var elixir_lv_ = elixir[i].select(".tabular-nums").text();
-        var intLv = parseInt(elixir_lv_.substr('3'));
-
-        sumLv += intLv;
-        elixirTxt += elixir_option + " " + elixir_lv_ +"\n";
+    
+    if(elixir.length > 0){
+        for(var i = 0; i < elixir.length ;i++){
+            var elixir_option = elixir[i].select(".flex-1").text();
+            var elixir_lv_ = elixir[i].select(".tabular-nums").text();
+            var intLv = parseInt(elixir_lv_.substr('3'));
+    
+            sumLv += intLv;
+            elixirTxt += elixir_option + " " + elixir_lv_ +"\n";
+        }
+    } else {
+        elixirTxt = '';
     }
+
 
 
     var retTxt = '';
@@ -305,7 +319,7 @@ function getUseritem(nickName) {
     retTxt += "["+percent5+"] "+equip5+ "\n";
     retTxt += "["+percent6+"] "+equip6+ "\n";
 
-    retTxt += "\n☆ [엘릭서] 총 Lv."+sumLv+"\n";
+    // 엘릭서 정보
     retTxt += elixirTxt;
 
     return retTxt;
