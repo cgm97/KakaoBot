@@ -13,6 +13,15 @@ module.exports.SERVER_CODE = {'1':'루페온','2':'실리안','3':'아만','4':'
 // LV별 획득골드량
 module.exports.LV_GOLD = {'1620':35000,'1600':29500,'1580':22500,'1560':18000,'1550':17500,'1540':17000,'1520':12400,'1500':9900,'1490':8400};
 
+// 아이템 카테고리 코드
+const CategoryCode = {"보석":210000, "각인서":40000};
+
+module.exports.GEMINDEX = {"10멸":"10레벨 멸화의 보석","10홍":"10레벨 홍염의 보석",
+                 "9멸":"9레벨 멸화의 보석","9홍":"9레벨 홍염의 보석",
+                 "8멸":"8레벨 멸화의 보석","8홍":"8레벨 홍염의 보석",
+                 "7멸":"7레벨 멸화의 보석","7홍":"7레벨 홍염의 보석"};
+module.exports.BOOKINDEX = {"저받":"저주받은 인형", "예둔":"예리한 둔기","아드":"이드레날린","타대":"타격의 대가","결대":"결투의 대가","기습":"기습의 대가","돌대":"돌격대장"};
+
 // 이미지 출력 함수
 module.exports.makeImg = (url,title,desc) => {
     var r = org.jsoup.Jsoup.connect('http://api.molya.kr/v1/image/byUrl')
@@ -33,3 +42,57 @@ module.exports.makeImg = (url,title,desc) => {
     
     return retImg.data.url;
 } 
+
+module.exports.getItemPrice = (itemName, Code) => {
+
+    // auctions = 경매장 - > 보석
+    // markets = 거래소
+    var data;
+    
+    if(Code == "보석"){
+        var url = "https://developer-lostark.game.onstove.com/auctions/items";
+        data = org.jsoup.Jsoup.connect(url)
+        .header("accept", "application/json")
+        .header("authorization", API.LOA_KEY)
+        .header("Content-Type", "application/json")
+        .requestBody(JSON.stringify(
+            { 
+            "CategoryCode": CategoryCode.보석,
+            "Sort": "BUY_PRICE",
+            "ItemTier": 3,
+            "ItemName": itemName
+            }))
+    
+        .ignoreHttpErrors(true)        
+        .ignoreContentType(true) 
+        .post()
+        .text();
+    }
+    else if(Code == "각인서"){
+        var url = "https://developer-lostark.game.onstove.com/markets/items";
+        data = org.jsoup.Jsoup.connect(url)
+            .header("accept", "application/json")
+            .header("authorization", API.LOA_KEY)
+            .header("Content-Type", "application/json")
+            .requestBody(JSON.stringify(
+                {
+                "Sort": "GRADE",
+                "CategoryCode": CategoryCode.각인서,
+                
+                "ItemGrade": "전설",
+                "ItemName": itemName+" 각인서",
+                
+                "SortCondition": "ASC"
+                }))
+
+            .ignoreHttpErrors(true)        
+            .ignoreContentType(true) 
+            .post()
+            .text();   
+    }
+
+    
+    data = JSON.parse(data);
+
+    return data;
+}

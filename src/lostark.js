@@ -119,6 +119,15 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     replier.reply('잘못된 명령어 입니다.');
                 }       
             }
+            if(param == '시세'){
+                let itemName = msg.substr(cmdArr[0].length + 1).trim();
+                if(isNaN(itemName)){
+                    replier.reply(getPriceItemInfo(itemName));
+                }
+                else{
+                    replier.reply('잘못된 명령어 입니다.');
+                }       
+            }
         }
     // }
     }
@@ -279,7 +288,7 @@ function getUseritem(nickName) {
     // 엘릭서 정보
     var elixir = data1.select(".flex.gap-4 div").select(".flex.items-center.space-x-2.font-medium");
     
-    var elixirTxt = "\n☆ [엘릭서] 총 Lv."+sumLv+"\n"; // 엘릭서 담긴 정보
+    var elixirTxt = '';
     var sumLv = 0;
     
     if(elixir.length > 0){
@@ -294,8 +303,11 @@ function getUseritem(nickName) {
     } else {
         elixirTxt = '';
     }
-
-
+    
+    var elixirHeadTxt = '';
+    if(elixirTxt != ''){
+        elixirHeadTxt = "\n☆ [엘릭서] 총 Lv."+sumLv+"\n"; // 엘릭서 담긴 정보     
+    }
 
     var retTxt = '';
     retTxt += "📢 "+nickName+"님의 정보" +"\n\n";
@@ -320,7 +332,7 @@ function getUseritem(nickName) {
     retTxt += "["+percent6+"] "+equip6+ "\n";
 
     // 엘릭서 정보
-    retTxt += elixirTxt;
+    retTxt += (elixirHeadTxt + elixirTxt);
 
     return retTxt;
 } 
@@ -469,12 +481,21 @@ function getIsland(today){
 // 크리스탈 실시간 가격
 function getCrystal(){
     var info = JSON.parse(org.jsoup.Jsoup.connect("https://loatool.taeu.kr/api/crystal-history/ohlc/1mon").ignoreContentType(true).get().text());
-    
-    price = info[info.length-1].close;
+    var info1 = JSON.parse(org.jsoup.Jsoup.connect("https://loatool.taeu.kr/api/crystal-history/ohlc/1h").ignoreContentType(true).get().text());
 
-    var result = '📢 실시간 크리스탈 시세 정보 \n\n';
-    result += '100 : ' + price;
-    result += '\n(100 크리스탈 : 골드)'
+    pre_price = parseInt(info1[info1.length-2].close);
+    now_price = parseInt(info[info.length-1].close);
+
+    var result = '📢 실시간 크리스탈 시세 정보\n\n';
+
+    result += '100 : ' + set_comma(now_price);
+    if(now_price > pre_price) {
+        result += ' (🔺'+set_comma(now_price-pre_price)+')';
+    } else if(now_price < pre_price) {
+        result += ' (🔽'+set_comma(pre_price-now_price)+')';
+    }
+    
+    result += '\n\n100 크리스탈 : 골드 (기준 : 1시간)'
     return result;
 }   
 
@@ -715,6 +736,55 @@ function getCalWeekGold(nickName){
     var result = '(상위 6캐릭)\n총 ' + set_comma(totalSum)+" G";
     result += '\n\n※1490미만 캐릭터 계산 X'
     return header + result;
+}
+
+// 경매장 시세 정보
+function getPriceItemInfo(itemName) {
+
+    var keys = Object.keys(Func.GEMINDEX); 
+    var bookKeys = Object.keys(Func.BOOKINDEX);
+
+    var flag = '각인서';
+    for(var i=0; i < keys.length; i++){
+        if(keys[i] == itemName){
+            flag = '보석';
+            itemName = Func.GEMINDEX[keys[i]];
+            break;
+        }
+    }
+  
+    
+    if(flag == '각인서'){
+        for(var i=0; i < bookKeys.length; i++){
+            if(bookKeys[i] == itemName){
+                itemName = Func.BOOKINDEX[bookKeys[i]];
+                break;
+            }
+        }
+    }
+
+    var priceJson = Func.getItemPrice(itemName,flag);
+
+    var price;
+    var result = '';
+
+    try{
+        if(flag == '각인서'){
+            price = priceJson.Items[0].CurrentMinPrice;
+            // result +=  '📢 '+ itemName+' 각인서\n';
+            // result +=  '현재가 : '+set_comma(price);
+            result +=  Func.makeImg(priceJson.Items[0].Icon,itemName+" 각인서",set_comma(price));
+        } else {
+            price = priceJson.Items[0].AuctionInfo.BuyPrice;
+            // result +=  '📢 '+ itemName+'\n';
+            // result +=  '현재가 : '+set_comma(price);
+            result +=  Func.makeImg(priceJson.Items[0].Icon,itemName,set_comma(price));
+        }
+    } catch(e){
+        return '존재하지않는 아이템명 입니다.';
+    }
+
+    return result;
 }
 
 // 천단위 콤마 함수

@@ -11,7 +11,7 @@ const scriptName = "command";
 
 let _CMD = ["/이모티콘","/날씨 지역명","/내일날씨 지역명","/출석","/출석목록","/띠별운세 띠","/별자리운세 별자리","/로또",
         ".정보 로아닉네임",".보석 로아닉네임",".분배금 금액",".장비 로아닉네임",".부캐 로아닉네임",".떠상 서버명",".모험섬",".크리스탈",".전설지도",".주급"];
-let _EMOJI = ["[따자하오]","[머쓱하오]","[시예시예콩]","[빠직하오]","[씨익하오]","[츄릅콩]"];
+let _EMOJI = ["[따자하오]","[머쓱하오]","[시예시예콩]","[빠직하오]","[씨익하오]","[츄릅하오]","[촉촉콩]","[노래콩]","[냠냠콩]","[잘자콩]","[도망콩]","[츄릅콩]","[씨익콩]","[더줘콩]","[뿅콩]","[감사콩]"];
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
     if(msg.startsWith("/")){
         let cmd = msg.slice(1);
@@ -36,6 +36,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             retMsg += '\n.모험섬 : 금일 모험섬 정보를 조회합니다.';
             retMsg += '\n.크리스탈 : 실시간 100크리스탈 당 골드시세를 조회합니다.';
             retMsg += '\n.전설지도 : 최적의 전설지도 입찰가를 계산합니다. (볼다이크 전용)';
+            retMsg += '\n.시세 [보석 또는 각인서] : 입력된 보석 또는 각인서의 현재가를 조회합니다. == > 시세 [10멸/홍] 또는 .시세[저받/원한] (보석은 7~10멸홍 지원 , 각인서는 줄임말(예둔 등) 현재 소량만 지원)';
             retMsg += '\n╚══════════════════╝';
 
             retMsg += '\n\n🔘🔘🔘 유틸리티 명령어 모음 🔘🔘🔘';
@@ -46,7 +47,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             retMsg += '\n/출석 : 금일 출석체크를 진행합니다.';
             retMsg += '\n/출석목록 : 금일 출석체크를 완료한 유저 명단을 조회합니다.';
             retMsg += '\n/띠별운세 [띠] : 입력된 띠의 오늘 운세를 조회합니다.';
-            retMsg += '\n/별자리운세 [별자리] : 입력된 별자리의 오늘 운새를 조회합니다.';
+            retMsg += '\n/별자리운세 [별자리] : 입력된 별자리의 오늘 운세를 조회합니다.';
             retMsg += '\n/로또 [0~4] : 최근 회차 로또 번호 정보를 토대로 나의 로또당첨 여부를 조회합니다.';
             retMsg += '\n/번역 : 입력된 글씨를 원하는 언어로 번역 해준다. (PAPAGO) _ 번역 도움말 SHOW';
             retMsg += '\n╚══════════════════╝';
@@ -68,6 +69,9 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             //         retMsg += _CMD[i];
             //     }
             // }
+
+            retMsg += '\n\n채팅시스템 기능 추가는 관리자 문의주세요.';
+
             replier.reply(retMsg);
         }
         // else if(param == '이모티콘'){
