@@ -1,4 +1,5 @@
 const scriptName = "command";
+
 /**
  * (string) room
  * (string) sender
@@ -12,6 +13,9 @@ const scriptName = "command";
 let _CMD = ["/이모티콘","/날씨 지역명","/내일날씨 지역명","/출석","/출석목록","/띠별운세 띠","/별자리운세 별자리","/로또",
         ".정보 로아닉네임",".보석 로아닉네임",".분배금 금액",".장비 로아닉네임",".부캐 로아닉네임",".떠상 서버명",".모험섬",".크리스탈",".전설지도",".주급"];
 let _EMOJI = ["[따자하오]","[머쓱하오]","[시예시예콩]","[빠직하오]","[씨익하오]","[츄릅하오]","[촉촉콩]","[노래콩]","[냠냠콩]","[잘자콩]","[도망콩]","[츄릅콩]","[씨익콩]","[더줘콩]","[뿅콩]","[감사콩]"];
+// 분양받은 room 리스트
+let ROOMLIST = ['빈틈 테스트','로스트아크 빈틈','기분좋은향기'];
+
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
     if(msg.startsWith("/")){
         let cmd = msg.slice(1);
@@ -70,21 +74,54 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             //     }
             // }
 
-            retMsg += '\n\n채팅시스템 기능 추가는 관리자 문의주세요.';
+            retMsg += '\n\n🔘🔘🔘 관리자 문의 🔘🔘🔘';
+            retMsg += '\n※ 💬 명령어 [ @ ]';
+            retMsg += '\n@문의 [할말] : 봇 관리자에게 [할말]을 전달합니다.';
 
             replier.reply(retMsg);
         }
-        // else if(param == '이모티콘'){
-        //     var retMsg = '';
-        //     for(var i=0; i < _EMOJI.length; i++){
-        //         if(i < _EMOJI.length-1){
-        //             retMsg += _EMOJI[i] + "\n";
-        //         } else {
-        //             retMsg += _EMOJI[i];
-        //         }
-        //     }
-        //     replier.reply(retMsg);
-        // }
+    }
+
+    // 관리자 문의 및 전용
+    else if(msg.startsWith("@")){
+        let cmd = msg.slice(1);
+        var cmdArr = cmd.split(' ');
+
+        let param = cmdArr[0];
+        // @답변 room 할말
+        if(param == '답변'){
+            var sendRoom = cmdArr[1];
+            var talk = cmdArr[2];
+            if(sender == ''){
+                var talk = '';
+                for(var i=2; i < cmdArr.length; i++){
+                    talk += cmdArr[i] + ' ';
+                }
+                Api.replyRoom(sendRoom, "관리자 답변이 도착 하였습니다. "+ '\u200b'.repeat(501)+'\n\n 관리자 > '+ talk);
+            }else{
+                replier.reply('접근 권한이 없습니다.');
+            }
+        }
+        // @공지 할말
+        else if(param == '공지'){
+            if(sender == ''){
+                var talk = cmdArr[1];
+                for(var i=0; i<ROOMLIST.length; i++){
+                    Api.replyRoom(ROOMLIST[i], "빈틈봇 공지 도착 하였습니다. "+ '\u200b'.repeat(501)+'\n\n 관리자 > '+ talk);
+                }               
+            }else{
+                replier.reply('접근 권한이 없습니다.');
+            }
+        }
+        // @문의 할말
+        else if(param == '문의'){
+            var talk = '';
+            for(var i=1; i < cmdArr.length; i++){
+                talk += cmdArr[i] + ' ';
+            }       
+            Api.replyRoom('빈틈 테스트', room + " 방 에서 문의가 왔습니다."+'\u200b'.repeat(501) + '\n\n'+ sender + ' > ' + talk);
+            replier.reply('정상적으로 문의가 전달 되었습니다.');
+        }
     }
 }
 
