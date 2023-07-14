@@ -130,7 +130,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         else if(param == '문의'){
             var talk = '';
 
-            if(msg.length > 3){
+            if(msg.trim().length > 3){
                 for(var i=1; i < cmdArr.length; i++){
                     talk += cmdArr[i] + ' ';
                 }       
