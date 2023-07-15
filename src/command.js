@@ -1,3 +1,4 @@
+const Func = require('function');
 const scriptName = "command";
 
 /**
@@ -10,12 +11,14 @@ const scriptName = "command";
  * (string) packageName
  */
 
+
 let _CMD = ["/이모티콘","/날씨 지역명","/내일날씨 지역명","/출석","/출석목록","/띠별운세 띠","/별자리운세 별자리","/로또",
         ".정보 로아닉네임",".보석 로아닉네임",".분배금 금액",".장비 로아닉네임",".부캐 로아닉네임",".떠상 서버명",".모험섬",".크리스탈",".전설지도",".주급"];
 let _EMOJI = ["[따자하오]","[머쓱하오]","[시예시예콩]","[빠직하오]","[씨익하오]","[츄릅하오]","[촉촉콩]","[노래콩]","[냠냠콩]","[잘자콩]","[도망콩]","[츄릅콩]","[씨익콩]","[더줘콩]","[뿅콩]","[감사콩]"];
-// 분양받은 room 리스트
-// let ROOMLIST = ['빈틈 테스트','로스트아크 빈틈','기분좋은향기'];
- let ROOMLIST = ['빈틈 테스트','로스트아크 빈틈'];
+
+
+
+//  let ROOMLIST = ['빈틈 테스트','로스트아크 빈틈'];
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
     if(msg.startsWith("/")){
         let cmd = msg.slice(1);
@@ -74,7 +77,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             //     }
             // }
 
-            retMsg += '\n\n🔘🔘🔘 관리자 문의 🔘🔘🔘';
+            retMsg += '\n\n🔘🔘🔘 빈틈봇 버그/문의 🔘🔘🔘';
             retMsg += '\n※ 💬 명령어 [ @ ]';
             retMsg += '\n@문의 [할말] : 봇 관리자에게 [할말]을 전달합니다.';
 
@@ -106,6 +109,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     }
                 }
                 Api.replyRoom(sendRoom, "관리자 답변이 도착 하였습니다. "+ '\u200b'.repeat(501)+'\n\n '+ talk);
+                replier.reply('정상적으로 답변이 전달 되었습니다.');
             }else{
                 replier.reply('접근 권한이 없습니다.');
             }
@@ -119,9 +123,15 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     talk += cmdArr[i] + ' ';
                 }  
 
-                for(var i=0; i<ROOMLIST.length; i++){
-                    Api.replyRoom(ROOMLIST[i], "빈틈봇 공지가 도착 하였습니다. "+ '\u200b'.repeat(501)+'\n\n 관리자 > '+ talk);
-                }               
+                var cnt = 0;
+                for(var i=0; i<Func.ROOMLIST.length; i++){
+                    Api.replyRoom(Func.ROOMLIST[i], "빈틈봇 공지가 도착 하였습니다. "+ '\u200b'.repeat(501)+'\n\n 관리자 > '+ talk);
+                    java.lang.Thread.sleep(1000);
+                    replier.reply(Func.ROOMLIST[i]);     
+                    java.lang.Thread.sleep(1000);   
+                    cnt++;
+                }  
+                replier.reply(cnt+'개 톡방 공지 전송 완료');                 
             }else{
                 replier.reply('접근 권한이 없습니다.');
             }
@@ -138,6 +148,31 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 replier.reply('정상적으로 문의가 전달 되었습니다.');
             } else {
                 replier.reply('문의 내용을 입력해주세요.');
+            }
+        }
+        // @분양 초대링크 패스워드 인원수
+        else if(param == '분양'){
+            var talk = '';
+
+            if(msg.trim().length > 3){
+
+                if(cmdArr[3] < 10){
+                    replier.reply('죄송합니다. 분양받고자하는 방 최소인원은 10명 이상이어야합니다.');
+                    return false;
+                }
+
+                for(var i=1; i < cmdArr.length; i++){
+                    talk += cmdArr[i] + ' ';
+                }       
+
+                try{
+                    Api.replyRoom('빈틈 테스트',"분양 문의가 도착했습니다."+'\u200b'.repeat(501) + '\n\n'+ sender + ' > ' + talk);
+                    replier.reply('정상적으로 분양 신청이 완료 되었습니다.');
+                } catch(e){
+                    replier.reply('양식에 맞지 않아 신청이 실패되었습니다.');
+                }
+            } else {
+                replier.reply('@분양 [링크] [패스워드] [인원수]');
             }
         }
     }

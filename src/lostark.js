@@ -1,5 +1,6 @@
 const scriptName = "lostark";
 
+importPackage(android.graphics);
 // 이미지 생성 function
 // Func.img(이미지URL, 제목, 설명);
 const Func = require('function');
@@ -63,7 +64,9 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                     replier.reply('아바타 이미지 생성중...');
                     var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
                     var imgUrl = data0.select(".profile-equipment__character img").attr("src");
-                    replier.reply(Func.makeImg(imgUrl,nickName,'아바타'));         
+
+                    replier.reply(character_img_temp(nickName,imgUrl));  
+                    // replier.reply(Func.makeImg(imgUrl,nickName,'아바타'));         
                 }
                 else{
                     replier.reply('잘못된 명령어 입니다.');
@@ -771,14 +774,14 @@ function getPriceItemInfo(itemName) {
     try{
         if(flag == '각인서'){
             price = priceJson.Items[0].CurrentMinPrice;
-            // result +=  '📢 '+ itemName+' 각인서\n';
-            // result +=  '현재가 : '+set_comma(price);
-            result +=  Func.makeImg(priceJson.Items[0].Icon,itemName+" 각인서",set_comma(price));
+            result +=  '📢 '+ itemName+' 각인서\n';
+            result +=  '현재가 : '+set_comma(price);
+            // result +=  Func.makeImg(priceJson.Items[0].Icon,itemName+" 각인서",set_comma(price));
         } else {
             price = priceJson.Items[0].AuctionInfo.BuyPrice;
-            // result +=  '📢 '+ itemName+'\n';
-            // result +=  '현재가 : '+set_comma(price);
-            result +=  Func.makeImg(priceJson.Items[0].Icon,itemName,set_comma(price));
+            result +=  '📢 '+ itemName+'\n';
+            result +=  '현재가 : '+set_comma(price);
+            // result +=  Func.makeImg(priceJson.Items[0].Icon,itemName,set_comma(price));
         }
     } catch(e){
         return '존재하지않는 아이템명 입니다.';
@@ -795,53 +798,53 @@ function set_comma(price) {
 }
 
 // 이미지 _ oe image
-// function character_img_temp(nickName, imgUrl){
-//     txt = nickName;
-//     size = 40;
-//     url = imgUrl;
-//     con = new java.net.URL(url).openConnection(); // URL을 통해 연결을 생성합니다.
-//     con.setDoInput(true); // 입력 가능한 상태로 설정합니다.
-//     con.setConnectTimeout(3000); // 연결 제한 시간을 3초로 설정합니다.
-//     con.setReadTimeout(5000); // 읽기 제한 시간을 5초로 설정합니다.
-//     bmp = android.graphics.BitmapFactory.decodeStream(con.getInputStream()); // 인풋 스트림으로부터 비트맵을 디코딩합니다.
-//     con.disconnect(); // 연결을 종료합니다.
-//     img = bmp.copy(Bitmap.Config.ARGB_8888, true); // 비트맵을 복사하고, 컨피그는 ARGB_8888, isMutable은 true로 설정합니다.
-//     can = new Canvas(img); // 캔버스를 생성합니다.
-//     bounds = new Rect(); // 경계 값을 저장할 Rect 객체를 생성합니다.
-//     paint = new Paint(); // 페인트 객체를 생성합니다.
-//     paint.setTextSize(size); // 텍스트 사이즈를 설정합니다.
-//     paint.setAntiAlias(true); // 안티 앨리어싱을 적용합니다.
-//     paint.getTextBounds(txt,0,txt.length,bounds); // 텍스트의 경계 값을 Rect 객체에 저장합니다.
-//     paint.setARGB(255,255,255,255); // 페인트 객체에 흰색을 설정합니다.
-//     paint2 = new Paint(); // 두 번째 페인트 객체를 생성합니다.
-//     paint2.setStyle(Paint.Style.STROKE); // 스트로크 스타일을 설정합니다.
-//     paint2.setStrokeWidth(3); // 선 굵기를 설정합니다.
-//     paint2.setARGB(255,0,0,0); // 검은색을 설정합니다.
-//     paint2.setTextSize(size); // 텍스트 사이즈를 설정합니다.
-//     paint2.setAntiAlias(true); // 안티 앨리어싱을 적용합니다.
-//     // can.drawText(txt,(can.width-bounds.width())/5,(can.height-bounds.height())/5,paint2); // 검은색으로 중앙에 텍스트를 그립니다.
-//     // can.drawText(txt,(can.width-bounds.width())/5,(can.height-bounds.height())/5,paint); // 흰색으로 중앙에 텍스트를 그립니다.
-//     bytearrayoutputstream = new java.io.ByteArrayOutputStream();
-//     img.compress(Bitmap.CompressFormat.JPEG, 100, bytearrayoutputstream);
-//     bytearray = bytearrayoutputstream.toByteArray();
-//     imgb64 = new java.util.Base64.getEncoder().encodeToString(bytearray);
-//     d = {"image":imgb64,"title":"title"};
-//     r = org.jsoup.Jsoup.connect("https://a.cgm97.workers.dev/s")
-//             .header("Content-Type", "application/json")
-//             .header("Accept", "text/plain")
-//             .followRedirects(true)
-//             .ignoreHttpErrors(true)
-//             .ignoreContentType(true)
-//             .method(org.jsoup.Connection.Method.POST)
-//             .maxBodySize(1000000*30)
-//             .requestBody(JSON.stringify(d))
-//             .timeout(0)
-//             .execute();
-//             res = r.body(); // 암호화 6자리
+function character_img_temp(nickName, imgUrl){
+    txt = nickName;
+    size = 40;
+    url = imgUrl;
+    con = new java.net.URL(url).openConnection(); // URL을 통해 연결을 생성합니다.
+    con.setDoInput(true); // 입력 가능한 상태로 설정합니다.
+    con.setConnectTimeout(3000); // 연결 제한 시간을 3초로 설정합니다.
+    con.setReadTimeout(5000); // 읽기 제한 시간을 5초로 설정합니다.
+    bmp = android.graphics.BitmapFactory.decodeStream(con.getInputStream()); // 인풋 스트림으로부터 비트맵을 디코딩합니다.
+    con.disconnect(); // 연결을 종료합니다.
+    img = bmp.copy(Bitmap.Config.ARGB_8888, true); // 비트맵을 복사하고, 컨피그는 ARGB_8888, isMutable은 true로 설정합니다.
+    can = new Canvas(img); // 캔버스를 생성합니다.
+    bounds = new Rect(); // 경계 값을 저장할 Rect 객체를 생성합니다.
+    paint = new Paint(); // 페인트 객체를 생성합니다.
+    paint.setTextSize(size); // 텍스트 사이즈를 설정합니다.
+    paint.setAntiAlias(true); // 안티 앨리어싱을 적용합니다.
+    paint.getTextBounds(txt,0,txt.length,bounds); // 텍스트의 경계 값을 Rect 객체에 저장합니다.
+    paint.setARGB(255,255,255,255); // 페인트 객체에 흰색을 설정합니다.
+    paint2 = new Paint(); // 두 번째 페인트 객체를 생성합니다.
+    paint2.setStyle(Paint.Style.STROKE); // 스트로크 스타일을 설정합니다.
+    paint2.setStrokeWidth(3); // 선 굵기를 설정합니다.
+    paint2.setARGB(255,0,0,0); // 검은색을 설정합니다.
+    paint2.setTextSize(size); // 텍스트 사이즈를 설정합니다.
+    paint2.setAntiAlias(true); // 안티 앨리어싱을 적용합니다.
+    // can.drawText(txt,(can.width-bounds.width())/5,(can.height-bounds.height())/5,paint2); // 검은색으로 중앙에 텍스트를 그립니다.
+    // can.drawText(txt,(can.width-bounds.width())/5,(can.height-bounds.height())/5,paint); // 흰색으로 중앙에 텍스트를 그립니다.
+    bytearrayoutputstream = new java.io.ByteArrayOutputStream();
+    img.compress(Bitmap.CompressFormat.JPEG, 100, bytearrayoutputstream);
+    bytearray = bytearrayoutputstream.toByteArray();
+    imgb64 = new java.util.Base64.getEncoder().encodeToString(bytearray);
+    d = {"image":imgb64,"title":"title"};
+    r = org.jsoup.Jsoup.connect("https://a.cgm97.workers.dev/s")
+            .header("Content-Type", "application/json")
+            .header("Accept", "text/plain")
+            .followRedirects(true)
+            .ignoreHttpErrors(true)
+            .ignoreContentType(true)
+            .method(org.jsoup.Connection.Method.POST)
+            .maxBodySize(1000000*30)
+            .requestBody(JSON.stringify(d))
+            .timeout(0)
+            .execute();
+            res = r.body(); // 암호화 6자리
 
     
-//     return 'https://a.cgm97.workers.dev/e/'+res;
-// }
+    return 'https://a.cgm97.workers.dev/e/'+res;
+}
 
 //아래 4개의 메소드는 액티비티 화면을 수정할때 사용됩니다.
 function onCreate(savedInstanceState, activity) {
