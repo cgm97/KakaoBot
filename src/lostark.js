@@ -1,6 +1,6 @@
 const scriptName = "lostark";
-
 importPackage(android.graphics);
+
 // 이미지 생성 function
 // Func.img(이미지URL, 제목, 설명);
 const Func = require('function');
@@ -15,162 +15,142 @@ const Func = require('function');
  */
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
     
-    // if(room == '빈틈 테스트'){
-        if(msg.startsWith(".")){
-            let cmd = msg.slice(1);
-            var cmdArr = cmd.split(' ');
-    
-            let param = cmdArr[0];
-    
-            // if(param == '정보'){
-            //     let nickName = msg.substr(cmdArr[0].length + 1).trim();
-            //     if(isNaN(nickName)){
-            //         replier.reply(getUserInfo(nickName));
-            //     }
-            //     else {
-            //         replier.reply('잘못된 명령어 입니다.');
-            //     }              
-            // }
-            if(param == '보석'){
-                let nickName = msg.substr(cmdArr[0].length + 1).trim();
-                if(isNaN(nickName)){
-                    replier.reply(getUserGem(nickName));
-                }
-                else {
-                    replier.reply('잘못된 명령어 입니다.');
-                }              
-            }
-            if(param == '분배금'){
-                let gold = msg.substr(cmdArr[0].length + 1).trim();
-                if(!isNaN(gold)){
-                    replier.reply(calGold(gold));
-                }
-                else{
-                    replier.reply('잘못된 명령어 입니다.');
-                }
-            }
-            if(param == '정보'){
-                let nickName = msg.substr(cmdArr[0].length + 1).trim();
-                if(isNaN(nickName)){
-                    replier.reply(getUseritem(nickName));       
-                }
-                else{
-                    replier.reply('잘못된 명령어 입니다.');
-                }      
-            }
-            if(param == '아바타'){
-                let nickName = msg.substr(cmdArr[0].length + 1).trim();
-                if(isNaN(nickName)){
-                    replier.reply('아바타 이미지 생성중...');
-                    var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
-                    var imgUrl = data0.select(".profile-equipment__character img").attr("src");
+    if(msg.startsWith(".")){
+        let cmd = msg.slice(1);
+        var cmdArr = cmd.split(' ');
 
-                    replier.reply(character_img_temp(nickName,imgUrl));  
-                    // replier.reply(Func.makeImg(imgUrl,nickName,'아바타'));         
-                }
-                else{
-                    replier.reply('잘못된 명령어 입니다.');
-                }      
-            }
-            if(param == '떠상'){
-                let serverName = msg.substr(cmdArr[0].length + 1).trim();
-                if(isNaN(serverName)){
-                    replier.reply(getMarketInfo(serverName));        
-                }
-                else{
-                    replier.reply('잘못된 명령어 입니다.');
-                }        
-            }
-            if(param == '내실'){
-                let nickName = msg.substr(cmdArr[0].length + 1).trim();
-                if(isNaN(nickName)){
-                    replier.reply(getCollection(nickName));
-                }
-                else{
-                    replier.reply('잘못된 명령어 입니다.');
-                }        
-            }
-            if(param == '모험섬'){
-                var date = new Date();
-                var year = date.getFullYear();
-                var month = ("0" + (1 + date.getMonth())).slice(-2);
-                var day = ("0" + date.getDate()).slice(-2);
+        let param = cmdArr[0];
 
-                replier.reply(getIsland(year + month + day));     
+        if(param == '정보'){
+            let nickName = msg.substr(cmdArr[0].length + 1).trim();
+            if(isNaN(nickName)){
+                replier.reply(getUserinfo(nickName));
             }
-            if(param == '크리스탈'){
-                replier.reply(getCrystal());     
+            else {
+                replier.reply('잘못된 명령어 입니다.');
+            }              
+        }
+        if(param == '장신구'){
+            let nickName = msg.substr(cmdArr[0].length + 1).trim();
+            if(isNaN(nickName)){
+                replier.reply(getUserAccessory(nickName));
             }
-            if(param == '전설지도'){
-                replier.reply(getSecretMapPrice());     
+            else {
+                replier.reply('잘못된 명령어 입니다.');
+            }              
+        }
+        if(param == '보석'){
+            let nickName = msg.substr(cmdArr[0].length + 1).trim();
+            if(isNaN(nickName)){
+                replier.reply(getUserGem(nickName));
             }
-            if(param == '부캐'){
-                let nickName = msg.substr(cmdArr[0].length + 1).trim();
-                if(isNaN(nickName)){
-                    replier.reply(getSubUserInfo(nickName));
-                }
-                else{
-                    replier.reply('잘못된 명령어 입니다.');
-                }         
+            else {
+                replier.reply('잘못된 명령어 입니다.');
+            }              
+        }
+        if(param == '분배금'){
+            let gold = msg.substr(cmdArr[0].length + 1).trim();
+            if(!isNaN(gold)){
+                replier.reply(calGold(gold));
             }
-            if(param == '주급'){
-                let nickName = msg.substr(cmdArr[0].length + 1).trim();
-                if(isNaN(nickName)){
-                    replier.reply(getCalWeekGold(nickName));
-                }
-                else{
-                    replier.reply('잘못된 명령어 입니다.');
-                }       
-            }
-            if(param == '시세'){
-                let itemName = msg.substr(cmdArr[0].length + 1).trim();
-                if(isNaN(itemName)){
-                    replier.reply(getPriceItemInfo(itemName));
-                }
-                else{
-                    replier.reply('잘못된 명령어 입니다.');
-                }       
+            else{
+                replier.reply('잘못된 명령어 입니다.');
             }
         }
-    // }
+        if(param == '장비'){
+            let nickName = msg.substr(cmdArr[0].length + 1).trim();
+            if(isNaN(nickName)){
+                replier.reply(getUseritem(nickName));       
+            }
+            else{
+                replier.reply('잘못된 명령어 입니다.');
+            }      
+        }
+        if(param == '아바타'){
+            let nickName = msg.substr(cmdArr[0].length + 1).trim();
+            if(isNaN(nickName)){
+                replier.reply('아바타 이미지 생성중...');
+                var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
+                var imgUrl = data0.select(".profile-equipment__character img").attr("src");
+
+                replier.reply(Func.makeImgOG(nickName,imgUrl));  
+                // replier.reply(Func.makeImg(imgUrl,nickName,'아바타'));         
+            }
+            else{
+                replier.reply('잘못된 명령어 입니다.');
+            }      
+        }
+        if(param == '떠상'){
+            let serverName = msg.substr(cmdArr[0].length + 1).trim();
+            if(isNaN(serverName)){
+                replier.reply(getMarketInfo(serverName));        
+            }
+            else{
+                replier.reply('잘못된 명령어 입니다.');
+            }        
+        }
+        if(param == '내실'){
+            let nickName = msg.substr(cmdArr[0].length + 1).trim();
+            if(isNaN(nickName)){
+                replier.reply(getCollection(nickName));
+            }
+            else{
+                replier.reply('잘못된 명령어 입니다.');
+            }        
+        }
+        if(param == '모험섬'){
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = ("0" + (1 + date.getMonth())).slice(-2);
+            var day = ("0" + date.getDate()).slice(-2);
+
+            replier.reply(getIsland(year + month + day));     
+        }
+        if(param == '크리스탈'){
+            replier.reply(getCrystal());     
+        }
+        if(param == '전설지도'){
+            replier.reply(getSecretMapPrice());     
+        }
+        if(param == '부캐'){
+            let nickName = msg.substr(cmdArr[0].length + 1).trim();
+            if(isNaN(nickName)){
+                replier.reply(getSubUserInfo(nickName));
+            }
+            else{
+                replier.reply('잘못된 명령어 입니다.');
+            }         
+        }
+        if(param == '주급'){
+            let nickName = msg.substr(cmdArr[0].length + 1).trim();
+            if(isNaN(nickName)){
+                replier.reply(getCalWeekGold(nickName));
+            }
+            else{
+                replier.reply('잘못된 명령어 입니다.');
+            }       
+        }
+        if(param == '거래소'){ // 각인서 , 재료 등
+            let itemName = msg.substr(cmdArr[0].length + 1).trim();
+            if(isNaN(itemName)){
+                replier.reply(getPriceMarketItem(itemName));
+            }
+            else{
+                replier.reply('잘못된 명령어 입니다.');
+            }       
+        }
+        if(param == '경매장'){ // 보석
+            let itemName = msg.substr(cmdArr[0].length + 1).trim();
+            if(isNaN(itemName)){
+                replier.reply(getPriceAuctionItem(itemName));
+            }
+            else{
+                replier.reply('잘못된 명령어 입니다.');
+            }       
+        }
     }
+}
 
-
-
-// 유저 정보 조회
-// function getUserInfo(nickName) {
-//     var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
-//     var data = data0.select("div.profile-ingame");
-
-//     if('캐릭터명을 확인해주세요.' == data.select("div > span:nth-child(2)").text()){
-//         return '존재하지않는 캐릭터입니다.';
-//     }
-
-//     var lv = data.select("div.level-info").select("span");
-//     var lv_ex = lv.get(1).ownText();
-//     var lv_ba = lv.get(3).ownText();
-//     var lv_it = data.select("div.level-info2").select("span").get(1).ownText();
-//     var info = data.select("div.game-info").select("span");
-//     var title = info.get(1).text();
-//     var guild = info.get(3).text();
-//     var pvp = info.get(5).text();
-//     var job = data0.select("img.profile-character-info__img").attr("alt");
-//     var imgUrl = data0.select(".profile-equipment__character img").attr("src");
-//     var server = data0.select("span.profile-character-info__server").text().replace("@", "");
-//     var result = "[로스트아크 캐릭터 정보]\n\n"+
-//         "닉네임 : " + nickName +
-//         "\n직업 : " + job +
-//         "\n서버 : " + server +
-//         "\n템/전/원 : " + lv_it + "/" + lv_ba + "/" + lv_ex;
-//         "\n칭호 : " + title +
-//         "\nPVP : " + pvp;
-//     if (guild != "-") result += "\n길드 : " + guild;
-
-//     var characterImg = character_img(nickName, imgUrl);
-//     result += '\n\n' + characterImg;
-
-//     return result;
-// }
 
 // 보석 정보 조회
 function getUserGem(nickName) {
@@ -202,7 +182,7 @@ function getUserGem(nickName) {
 
     // 보석 내용 json
     for(var i=0; i<gemList.length; i++){
-        var gemInfo = gemList[i].select('.skill_detail').text();
+        var gemInfo = gemList[i].select('.skill_details').text();
         var gemKey = gemList[i].select("span").attr("data-gemkey");
         gemInfoJson.push({'id' : gemKey, 'gemInfo' : gemInfo});
     }
@@ -234,111 +214,225 @@ function getUserGem(nickName) {
     return headText + bodyText;
 }
 
-// 유저 정보[장비] 조회
-function getUseritem(nickName) {
-    var data0 = org.jsoup.Jsoup.connect("https://api.losonsil.com/search/" + nickName).ignoreContentType(true).get().text();
-    var data1 = org.jsoup.Jsoup.connect("https://iloa.gg/character/" + nickName).ignoreContentType(true).get();
-
+// 유저 정보
+function getUserinfo(nickName) {
+    var data0 = org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/" + nickName).ignoreContentType(true).get().text();
     var infoJson = JSON.parse(data0);
+
+    if(infoJson.code == '404000'){
+        return '존재하지 않는 캐릭터입니다.';
+    }
+
+    var retTxt = '';
+    retTxt += "📢 "+ 'Lv.'+ infoJson.level +" " +nickName+"\n\n";
+    retTxt += '@'+Func.SERVER_CODE[infoJson.server]+'\n';
+    retTxt += Func.JOB_CODE[infoJson.job]+' ♬ '+'LV.'+infoJson.max_item_level+'\n';
+    if(infoJson.guild != null){
+        retTxt += '길드 ♬ '+ (infoJson.guild.is_owner == false ? '' :'👑')  + (infoJson.guild.name == '' ? '' :infoJson.guild.name)+'\n';
+    }else {
+        retTxt += '길드 ♬ - '+'\n';
+    }
+    retTxt += '칭호 ♬ '+ (infoJson.title == null? '-' : infoJson.title)  +'\n';
+    retTxt += '원정대 ♬ Lv.' + infoJson.expedition_level + '\nPVP ♬ '+ infoJson.pvp+'\n';
+    retTxt += '영지 ♬ '+infoJson.wisdom_name + ' Lv.' +infoJson.wisdom_level + '\n';
+
+    return retTxt;
+}
+
+// 유저 악세사리
+function getUserAccessory(nickName) {
+    var data0 = org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/" + nickName).ignoreContentType(true).get().text();
+
+    var infoJson = JSON.stringify(data0);
+    infoJson = JSON.parse(data0);
+
+    if(infoJson.code == '404000'){
+        return '존재하지 않는 캐릭터입니다.';
+    }
+
+    var necklace  = infoJson.equipments.necklace; //목걸이
+    var earring_1 = infoJson.equipments.earring_1; // 귀걸이
+    var earring_2 = infoJson.equipments.earring_2; // 귀걸이
+    var ring_1  = infoJson.equipments.ring_1; // 반지
+    var ring_2 = infoJson.equipments.ring_2; // 반지
+    var bracelet = infoJson.equipments.bracelet; // 팔찌
+    var ability_stone = infoJson.equipments.ability_stone; // 어빌리티 돌
+
+    var retTxt = "📢 "+ nickName+"님의 장신구";
+    // 목걸이
+    retTxt += '\n\n'+(necklace.grade == 6 ? '[고대]' : '[유물]') + ' ['+necklace.quality+'] '+ necklace.name + '\n';
+
+    var engrave_effects_Key = Object.keys(necklace.engrave_effects);
+    var bonus_effects_Key = Object.keys(necklace.bonus_effects);
+    // 각인효과
+    for(var i=0; i< engrave_effects_Key.length; i++){
+        retTxt += engrave_effects_Key[i] +' '+ necklace.engrave_effects[engrave_effects_Key[i]]+' ';
+    }
+    retTxt += '\n';
+    // 특성
+    for(var i=0; i< bonus_effects_Key.length; i++){
+        retTxt += bonus_effects_Key[i] +' : '+ necklace.bonus_effects[bonus_effects_Key[i]]+' ';
+    }
+
+    // 귀걸이1
+    retTxt += '\n\n'+(earring_1.grade == 6 ? '[고대]' : '[유물]') + ' ['+earring_1.quality+'] '+ earring_1.name + '\n';
+
+    engrave_effects_Key = Object.keys(earring_1.engrave_effects);
+    bonus_effects_Key = Object.keys(earring_1.bonus_effects);
+    for(var i=0; i< engrave_effects_Key.length; i++){
+        retTxt += engrave_effects_Key[i] +' '+ earring_1.engrave_effects[engrave_effects_Key[i]]+' ';
+    }
+    retTxt += '\n';
+    for(var i=0; i< bonus_effects_Key.length; i++){
+        retTxt += bonus_effects_Key[i] +' : '+ earring_1.bonus_effects[bonus_effects_Key[i]]+' ';
+    }
+
+    // 귀걸이2
+    retTxt += '\n\n'+(earring_2.grade == 6 ? '[고대]' : '[유물]') + ' ['+earring_2.quality+'] '+ earring_2.name + '\n';
+
+    engrave_effects_Key = Object.keys(earring_2.engrave_effects);
+    bonus_effects_Key = Object.keys(earring_2.bonus_effects);
+    for(var i=0; i< engrave_effects_Key.length; i++){
+        retTxt += engrave_effects_Key[i] +' '+ earring_2.engrave_effects[engrave_effects_Key[i]]+' ';
+    }
+    retTxt += '\n';
+    for(var i=0; i< bonus_effects_Key.length; i++){
+        retTxt += bonus_effects_Key[i] +' : '+ earring_2.bonus_effects[bonus_effects_Key[i]]+' ';
+    }
+
+    // 반지1
+    retTxt += '\n\n'+(ring_1.grade == 6 ? '[고대]' : ' [유물]') + ' ['+ring_1.quality+'] '+ ring_1.name + '\n';
+
+    engrave_effects_Key = Object.keys(ring_1.engrave_effects);
+    bonus_effects_Key = Object.keys(ring_1.bonus_effects);
+    for(var i=0; i< engrave_effects_Key.length; i++){
+        retTxt += engrave_effects_Key[i] +' '+ ring_1.engrave_effects[engrave_effects_Key[i]]+' ';
+    }
+    retTxt += '\n';
+    for(var i=0; i< bonus_effects_Key.length; i++){
+        retTxt += bonus_effects_Key[i] +' : '+ ring_1.bonus_effects[bonus_effects_Key[i]]+' ';
+    }
+
+    // 반지2
+    retTxt += '\n\n'+(ring_2.grade == 6 ? '[고대]' : '[유물]') + ' ['+ring_2.quality+'] '+ ring_2.name + '\n';
+
+    engrave_effects_Key = Object.keys(ring_2.engrave_effects);
+    bonus_effects_Key = Object.keys(ring_2.bonus_effects);
+    for(var i=0; i< engrave_effects_Key.length; i++){
+        retTxt += engrave_effects_Key[i] +' '+ ring_2.engrave_effects[engrave_effects_Key[i]]+' ';
+    }
+    retTxt += '\n';
+    for(var i=0; i< bonus_effects_Key.length; i++){
+        retTxt += bonus_effects_Key[i] +' : '+ ring_2.bonus_effects[bonus_effects_Key[i]]+' ';
+    }
+
+    // 팔찌
+    retTxt += '\n\n'+(bracelet.grade == 6 ? '[고대] ' : '[유물] ') + bracelet.name + '\n';
+
+    var braceletEffects = bracelet.effects;
+    for(var i=0; i< braceletEffects.length; i++){
+        retTxt += braceletEffects[i].name +' '+ (braceletEffects[i].value != null ? braceletEffects[i].value : '')+' ';
+    }
+
+    // 어빌리티 스톤
+    retTxt += '\n\n'+(ability_stone.grade == 6 ? '[고대] ' : '[유물] ') + ability_stone.name + '\n';
+
+    engrave_effects_Key = Object.keys(ability_stone.engrave_effects);
+    for(var i=0; i< engrave_effects_Key.length; i++){
+        retTxt += engrave_effects_Key[i] +' '+ ability_stone.engrave_effects[engrave_effects_Key[i]]+' ';
+    }
+
+    return retTxt;
+}
+
+// 유저 장비
+function getUseritem(nickName) {
+
+    var data0 = org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/" + nickName).ignoreContentType(true).get().text();
+    var infoJson = JSON.stringify(data0);
+    infoJson = JSON.parse(data0);
 
     if(infoJson.code == 'error'){
         return '존재하지않는 캐릭터입니다.';
     }
 
-    // 각인
-    var ablity = infoJson.ablity;
-    // 장비
-    var equip = infoJson.equip;
-    var equip1 = equip['000']; // 머리
-    var equip2 = equip['001']; // 견갑
-    var equip3 = equip['002']; // 상의
-    var equip4 = equip['003']; // 하의
-    var equip5 = equip['004']; // 장갑
-    var equip6 = equip['005']; // 견갑
-    // 품질
-    var percent = infoJson.equip_quality;
-    var percent1 = percent['000']; // 머리
-    var percent2 = percent['001']; // 견갑
-    var percent3 = percent['002']; // 상의
-    var percent4 = percent['003']; // 하의
-    var percent5 = percent['004']; // 장갑
-    var percent6 = percent['005']; // 견갑
-    // 카드
-    // var card = infoJson.card_data;
-    // var cardEffect = card[card.length - 1];
-
-    // level
-    var level = infoJson.level;
-    // class
-    var classs = infoJson.class;
-    // server
-    var server = infoJson.server;
-    var guild = infoJson.guild;
-    // 특성
-    var stat1 = infoJson.stat1; // 치명
-    var stat2 = infoJson.stat2; // 특화
-    var stat3 = infoJson.stat3; // 제압
-    var stat4 = infoJson.stat4; // 신속
-    var stat5 = infoJson.stat5; // 인내
-    var stat6 = infoJson.stat6; // 숙련
-
-    // 공격력
-    var power = infoJson.attack;
-    //hp
-    var hp = infoJson.hp;
-
-
-    // 엘릭서 정보
-    var elixir = data1.select(".flex.gap-4 div").select(".flex.items-center.space-x-2.font-medium");
-    
-    var elixirTxt = '';
-    var sumLv = 0;
-    
-    if(elixir.length > 0){
-        for(var i = 0; i < elixir.length ;i++){
-            var elixir_option = elixir[i].select(".flex-1").text();
-            var elixir_lv_ = elixir[i].select(".tabular-nums").text();
-            var intLv = parseInt(elixir_lv_.substr('3'));
-    
-            sumLv += intLv;
-            elixirTxt += elixir_option + " " + elixir_lv_ +"\n";
-        }
-    } else {
-        elixirTxt = '';
-    }
-    
-    var elixirHeadTxt = '';
-    if(elixirTxt != ''){
-        elixirHeadTxt = "\n☆ [엘릭서] 총 Lv."+sumLv+"\n"; // 엘릭서 담긴 정보     
-    }
 
     var retTxt = '';
-    retTxt += "📢 "+nickName+"님의 정보" +"\n\n";
-    retTxt += '@'+server+" - "+guild+"\n";
-    retTxt += classs+" ♬ "+"LV. "+level+"\n\n";
-    retTxt += "공격력 : "+power+"\n";
-    retTxt += "HP     : "+hp+"\n";
+    retTxt += "📢 "+nickName+"님의 장비" +"\n\n";
+    retTxt += "공격력 : "+infoJson.basic_effect.offense+"\n";
+    retTxt += "HP     : "+infoJson.basic_effect.vitality+"\n";
     retTxt += "\n☆ [특성]\n";
-    retTxt += "치명 " + stat1 + " 특화 "+stat2+"\n";
-    retTxt += "제압 " + stat3 + " 신속 "+stat4+"\n";
-    retTxt += "인내 " + stat5 + " 숙련 "+stat6+"\n";
+    retTxt += "치명 " + infoJson.battle_effect.crit + " 특화 "+infoJson.battle_effect.specialization+"\n";
+    retTxt += "제압 " + infoJson.battle_effect.domination + " 신속 "+infoJson.battle_effect.swiftness+"\n";
+    retTxt += "인내 " + infoJson.battle_effect.endurance + " 숙련 "+infoJson.battle_effect.expertise+"\n";
     retTxt += "\n☆ [각인]\n";
-    for(var i = 0; i < ablity.length; i++){
-        retTxt += ablity[i]+"\n";
+    for(var i = 0; i < infoJson.engraves.length; i++){
+        retTxt += 'Lv.'+infoJson.engraves[i].level+' '+infoJson.engraves[i].name+"\n";
     }
+
+    retTxt += "\n☆ [카드]\n";
+    var cardKey = Object.keys(infoJson.card_effects);
+    retTxt += infoJson.card_effects[cardKey][infoJson.card_effects[cardKey].length-1].name+'\n';
+
+    var elixir_lv = 0;
+    var hat    = infoJson.equipments.hat; //모자
+    var ornament = infoJson.equipments.ornament; // 견갑
+    var top    = infoJson.equipments.top; // 상의
+    var pants  = infoJson.equipments.pants; // 하의
+    var gloves = infoJson.equipments.gloves; // 장갑
+    var weapon = infoJson.equipments.weapon; // 무기
+
     retTxt += "\n☆ [장비]\n";
-    retTxt += "["+percent1+"] "+equip1+ "\n";
-    retTxt += "["+percent2+"] "+equip2+ "\n";
-    retTxt += "["+percent3+"] "+equip3+ "\n";
-    retTxt += "["+percent4+"] "+equip4+ "\n";
-    retTxt += "["+percent5+"] "+equip5+ "\n";
-    retTxt += "["+percent6+"] "+equip6+ "\n";
+    retTxt += "["+hat.quality+"] +"+hat.reinforce+' '+hat.name+ "\n";
+    if(hat.elixir_effect != null){
+        for(var i=0; i < hat.elixir_effect.details.length; i++){
+            retTxt += (hat.elixir_effect.details[i].name+' Lv.'+hat.elixir_effect.details[i].level+'\n');
+            elixir_lv += hat.elixir_effect.details[i].level;
+        }
+        retTxt += '\n';
+    }
+    retTxt += "["+ornament.quality+"] +"+ornament.reinforce+' '+ornament.name+ "\n";
+    if(ornament.elixir_effect != null){
+        for(var i=0; i < ornament.elixir_effect.details.length; i++){
+            retTxt += (ornament.elixir_effect.details[i].name+' Lv.'+ornament.elixir_effect.details[i].level+'\n');
+            elixir_lv += ornament.elixir_effect.details[i].level;
+        }
+        retTxt += '\n';
+    }
+    retTxt += "["+top.quality+"] +"+top.reinforce+' '+top.name+ "\n";
+    if(top.elixir_effect != null){
+        for(var i=0; i < top.elixir_effect.details.length; i++){
+            retTxt += (top.elixir_effect.details[i].name+' Lv.'+top.elixir_effect.details[i].level+'\n');
+            elixir_lv += top.elixir_effect.details[i].level;
+        }
+        retTxt += '\n';
+    }
+    retTxt += "["+pants.quality+"] +"+pants.reinforce+' '+pants.name+ "\n";
+    if(pants.elixir_effect != null){
+        for(var i=0; i < pants.elixir_effect.details.length; i++){
+            retTxt += (pants.elixir_effect.details[i].name+' Lv.'+pants.elixir_effect.details[i].level+'\n');
+            elixir_lv += pants.elixir_effect.details[i].level;
+        }
+        retTxt += '\n';
+    }
+    retTxt += "["+gloves.quality+"] +"+gloves.reinforce+' '+gloves.name+ "\n";
+    if(gloves.elixir_effect != null){
+        for(var i=0; i < gloves.elixir_effect.details.length; i++){
+            retTxt += (gloves.elixir_effect.details[i].name+' Lv.'+gloves.elixir_effect.details[i].level+'\n');
+            elixir_lv += gloves.elixir_effect.details[i].level;
+        }
+        retTxt += '\n';
+    }
+    retTxt += "["+weapon.quality+"] +"+weapon.reinforce+' '+weapon.name+ "\n";
 
     // 엘릭서 정보
-    retTxt += (elixirHeadTxt + elixirTxt);
+    if(elixir_lv != 0){
+        var elixir_setName = Object.keys(infoJson.equipments.elixir_set_effects);
+        retTxt += elixir_setName + " Lv."+elixir_lv+" "; // 엘릭서 담긴 정보    
+    }
 
     return retTxt;
-} 
+}
 
 // 분배금 최적가
 function calGold(gold){
@@ -429,15 +523,15 @@ function getCollection(nickName){
 
     var header = '📢 내실 - '+nickName+'  ｡·͜·｡\n\n';
     var result = '';
-    result += '▶️ ' + island_heart_Arr.name +' ['+ island_heart_Arr.value + ' / ' + island_heart_Arr.max_value + ']\n';
-    result += '▶️ ' + giant_heart_Arr.name +' ['+ giant_heart_Arr.value + ' / ' + giant_heart_Arr.max_value + ']\n';
-    result += '▶️ ' + ignea_token_Arr.name +' ['+ ignea_token_Arr.value + ' / ' + ignea_token_Arr.max_value + ']\n';
-    result += '▶️ ' + masterpiece_Arr.name +' ['+ masterpiece_Arr.value + ' / ' + masterpiece_Arr.max_value + ']\n';
-    result += '▶️ ' + memory_orgel_Arr.name +' ['+ memory_orgel_Arr.value + ' / ' + memory_orgel_Arr.max_value + ']\n';
-    result += '▶️ ' + mokoko_seed_Arr.name +' ['+ mokoko_seed_Arr.value + ' / ' + mokoko_seed_Arr.max_value + ']\n';
-    result += '▶️ ' + orpheus_star_Arr.name +' ['+ orpheus_star_Arr.value + ' / ' + orpheus_star_Arr.max_value + ']\n';
-    result += '▶️ ' + sea_bounty_Arr.name +' ['+ sea_bounty_Arr.value + ' / ' + sea_bounty_Arr.max_value + ']\n';
-    result += '▶️ ' + world_tree_leaf_Arr.name +' ['+ world_tree_leaf_Arr.value + ' / ' + world_tree_leaf_Arr.max_value + ']\n';
+    result += '▶️ ' + island_heart_Arr.name +' ['+ island_heart_Arr.value + ' / ' + island_heart_Arr.max_value + '] '+ Math.ceil(island_heart_Arr.value/island_heart_Arr.max_value*100)  +'%\n';
+    result += '▶️ ' + giant_heart_Arr.name +' ['+ giant_heart_Arr.value + ' / ' + giant_heart_Arr.max_value + '] '+ Math.ceil(giant_heart_Arr.value/giant_heart_Arr.max_value*100)  +'%\n';
+    result += '▶️ ' + ignea_token_Arr.name +' ['+ ignea_token_Arr.value + ' / ' + ignea_token_Arr.max_value + '] '+ Math.ceil(ignea_token_Arr.value/ignea_token_Arr.max_value*100)  +'%\n';
+    result += '▶️ ' + masterpiece_Arr.name +' ['+ masterpiece_Arr.value + ' / ' + masterpiece_Arr.max_value + '] '+ Math.ceil(masterpiece_Arr.value/masterpiece_Arr.max_value*100)  +'%\n';
+    result += '▶️ ' + memory_orgel_Arr.name +' ['+ memory_orgel_Arr.value + ' / ' + memory_orgel_Arr.max_value + '] '+ Math.ceil(memory_orgel_Arr.value/memory_orgel_Arr.max_value*100)  +'%\n';
+    result += '▶️ ' + mokoko_seed_Arr.name +' ['+ mokoko_seed_Arr.value + ' / ' + mokoko_seed_Arr.max_value + '] '+ Math.ceil(mokoko_seed_Arr.value/mokoko_seed_Arr.max_value*100)  +'%\n';
+    result += '▶️ ' + orpheus_star_Arr.name +' ['+ orpheus_star_Arr.value + ' / ' + orpheus_star_Arr.max_value + '] '+ Math.ceil(orpheus_star_Arr.value/orpheus_star_Arr.max_value*100)  +'%\n';
+    result += '▶️ ' + sea_bounty_Arr.name +' ['+ sea_bounty_Arr.value + ' / ' + sea_bounty_Arr.max_value + '] '+ Math.ceil(sea_bounty_Arr.value/sea_bounty_Arr.max_value*100)  +'%\n';
+    result += '▶️ ' + world_tree_leaf_Arr.name +' ['+ world_tree_leaf_Arr.value + ' / ' + world_tree_leaf_Arr.max_value + '] '+ Math.ceil(world_tree_leaf_Arr.value/world_tree_leaf_Arr.max_value*100)  +'%\n';
 
     return header + result;
 }
@@ -741,31 +835,23 @@ function getCalWeekGold(nickName){
     return header + result;
 }
 
-// 경매장 시세 정보
-function getPriceItemInfo(itemName) {
-
-    var keys = Object.keys(Func.GEMINDEX); 
+// 거래소
+function getPriceMarketItem(itemName) {
+   
     var bookKeys = Object.keys(Func.BOOKINDEX);
 
-    var flag = '각인서';
-    for(var i=0; i < keys.length; i++){
-        if(keys[i] == itemName){
-            flag = '보석';
-            itemName = Func.GEMINDEX[keys[i]];
+    var flag='각인서';
+    for(var i=0; i < bookKeys.length; i++){
+        if(bookKeys[i] == itemName){
+            flag = '각인서';
+            itemName = Func.BOOKINDEX[bookKeys[i]];
             break;
         }
     }
-  
     
-    if(flag == '각인서'){
-        for(var i=0; i < bookKeys.length; i++){
-            if(bookKeys[i] == itemName){
-                itemName = Func.BOOKINDEX[bookKeys[i]];
-                break;
-            }
-        }
+    if(itemName == '에스더 기운'){
+        flag = '에스더'
     }
-
     var priceJson = Func.getItemPrice(itemName,flag);
 
     var price;
@@ -777,14 +863,50 @@ function getPriceItemInfo(itemName) {
             result +=  '📢 '+ itemName+' 각인서\n';
             result +=  '현재가 : '+set_comma(price);
             // result +=  Func.makeImg(priceJson.Items[0].Icon,itemName+" 각인서",set_comma(price));
-        } else {
+        } 
+        else if(flag == '에스더'){
+            price = priceJson.Items[0].CurrentMinPrice;
+            result +=  '📢 '+ itemName+'\n';
+            result +=  '현재가 : '+set_comma(price);
+            // result +=  Func.makeImg(priceJson.Items[0].Icon,itemName+" 각인서",set_comma(price));
+        } 
+
+    } catch(e){
+        return '해당 아이템은 현재 지원하지 않습니다..';
+    }
+
+    return result;
+}
+
+// 경매장
+function getPriceAuctionItem(itemName) {
+   
+    var keys = Object.keys(Func.GEMINDEX); 
+
+    var flag='';
+    for(var i=0; i < keys.length; i++){
+        if(keys[i] == itemName){
+            flag = '보석';
+            itemName = Func.GEMINDEX[keys[i]];
+            break;
+        }
+    }
+    
+    var priceJson = Func.getItemPrice(itemName,flag);
+
+    var price;
+    var result = '';
+
+    try{
+        if(flag == '보석'){
             price = priceJson.Items[0].AuctionInfo.BuyPrice;
             result +=  '📢 '+ itemName+'\n';
             result +=  '현재가 : '+set_comma(price);
             // result +=  Func.makeImg(priceJson.Items[0].Icon,itemName,set_comma(price));
-        }
+        } 
+
     } catch(e){
-        return '존재하지않는 아이템명 입니다.';
+        return '잘못된 아이템 명이거나 존재하지 않습니다.';
     }
 
     return result;
@@ -795,55 +917,6 @@ function set_comma(price) {
 
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-}
-
-// 이미지 _ oe image
-function character_img_temp(nickName, imgUrl){
-    txt = nickName;
-    size = 40;
-    url = imgUrl;
-    con = new java.net.URL(url).openConnection(); // URL을 통해 연결을 생성합니다.
-    con.setDoInput(true); // 입력 가능한 상태로 설정합니다.
-    con.setConnectTimeout(3000); // 연결 제한 시간을 3초로 설정합니다.
-    con.setReadTimeout(5000); // 읽기 제한 시간을 5초로 설정합니다.
-    bmp = android.graphics.BitmapFactory.decodeStream(con.getInputStream()); // 인풋 스트림으로부터 비트맵을 디코딩합니다.
-    con.disconnect(); // 연결을 종료합니다.
-    img = bmp.copy(Bitmap.Config.ARGB_8888, true); // 비트맵을 복사하고, 컨피그는 ARGB_8888, isMutable은 true로 설정합니다.
-    can = new Canvas(img); // 캔버스를 생성합니다.
-    bounds = new Rect(); // 경계 값을 저장할 Rect 객체를 생성합니다.
-    paint = new Paint(); // 페인트 객체를 생성합니다.
-    paint.setTextSize(size); // 텍스트 사이즈를 설정합니다.
-    paint.setAntiAlias(true); // 안티 앨리어싱을 적용합니다.
-    paint.getTextBounds(txt,0,txt.length,bounds); // 텍스트의 경계 값을 Rect 객체에 저장합니다.
-    paint.setARGB(255,255,255,255); // 페인트 객체에 흰색을 설정합니다.
-    paint2 = new Paint(); // 두 번째 페인트 객체를 생성합니다.
-    paint2.setStyle(Paint.Style.STROKE); // 스트로크 스타일을 설정합니다.
-    paint2.setStrokeWidth(3); // 선 굵기를 설정합니다.
-    paint2.setARGB(255,0,0,0); // 검은색을 설정합니다.
-    paint2.setTextSize(size); // 텍스트 사이즈를 설정합니다.
-    paint2.setAntiAlias(true); // 안티 앨리어싱을 적용합니다.
-    // can.drawText(txt,(can.width-bounds.width())/5,(can.height-bounds.height())/5,paint2); // 검은색으로 중앙에 텍스트를 그립니다.
-    // can.drawText(txt,(can.width-bounds.width())/5,(can.height-bounds.height())/5,paint); // 흰색으로 중앙에 텍스트를 그립니다.
-    bytearrayoutputstream = new java.io.ByteArrayOutputStream();
-    img.compress(Bitmap.CompressFormat.JPEG, 100, bytearrayoutputstream);
-    bytearray = bytearrayoutputstream.toByteArray();
-    imgb64 = new java.util.Base64.getEncoder().encodeToString(bytearray);
-    d = {"image":imgb64,"title":"title"};
-    r = org.jsoup.Jsoup.connect("https://a.cgm97.workers.dev/s")
-            .header("Content-Type", "application/json")
-            .header("Accept", "text/plain")
-            .followRedirects(true)
-            .ignoreHttpErrors(true)
-            .ignoreContentType(true)
-            .method(org.jsoup.Connection.Method.POST)
-            .maxBodySize(1000000*30)
-            .requestBody(JSON.stringify(d))
-            .timeout(0)
-            .execute();
-            res = r.body(); // 암호화 6자리
-
-    
-    return 'https://a.cgm97.workers.dev/e/'+res;
 }
 
 //아래 4개의 메소드는 액티비티 화면을 수정할때 사용됩니다.
