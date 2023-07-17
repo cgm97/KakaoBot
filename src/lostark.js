@@ -381,8 +381,8 @@ function getUseritem(nickName) {
     var pants  = infoJson.equipments.pants; // 하의
     var gloves = infoJson.equipments.gloves; // 장갑
     var weapon = infoJson.equipments.weapon; // 무기
-
-    retTxt += "\n☆ [장비]\n";
+    var avg_quality = (hat.quality + ornament.quality + top.quality + pants.quality + gloves.quality + weapon.quality) / 6;
+    retTxt += "\n☆ [장비] 평균 품질 "+ avg_quality +"\n";
     retTxt += "["+hat.quality+"] +"+hat.reinforce+' '+hat.name+ "\n";
     if(hat.elixir_effect != null){
         for(var i=0; i < hat.elixir_effect.details.length; i++){
@@ -521,18 +521,30 @@ function getCollection(nickName){
     var sea_bounty_Arr = infoJson.sea_bounty;
     var world_tree_leaf_Arr = infoJson.world_tree_leaf;
 
+    var island_heart_score = Math.ceil(island_heart_Arr.value/island_heart_Arr.max_value*100);
+    var giant_heart_score = Math.ceil(giant_heart_Arr.value/giant_heart_Arr.max_value*100);
+    var ignea_token_score = Math.ceil(ignea_token_Arr.value/ignea_token_Arr.max_value*100);
+    var masterpiece_score = Math.ceil(masterpiece_Arr.value/masterpiece_Arr.max_value*100);
+    var memory_orgel_score = Math.ceil(memory_orgel_Arr.value/memory_orgel_Arr.max_value*100);
+    var mokoko_seed_score =  Math.ceil(mokoko_seed_Arr.value/mokoko_seed_Arr.max_value*100);
+    var orpheus_star_score = Math.ceil(orpheus_star_Arr.value/orpheus_star_Arr.max_value*100);
+    var sea_bounty_score = Math.ceil(sea_bounty_Arr.value/sea_bounty_Arr.max_value*100);
+    var world_tree_leaf_score = Math.ceil(world_tree_leaf_Arr.value/world_tree_leaf_Arr.max_value*100);
+
+    var avg_collect = (island_heart_score + giant_heart_score + ignea_token_score + masterpiece_score + memory_orgel_score + mokoko_seed_score +
+                        orpheus_star_score + sea_bounty_score + world_tree_leaf_score) / 9;
     var header = '📢 내실 - '+nickName+'  ｡·͜·｡\n\n';
     var result = '';
-    result += '▶️ ' + island_heart_Arr.name +' ['+ island_heart_Arr.value + ' / ' + island_heart_Arr.max_value + '] '+ Math.ceil(island_heart_Arr.value/island_heart_Arr.max_value*100)  +'%\n';
-    result += '▶️ ' + giant_heart_Arr.name +' ['+ giant_heart_Arr.value + ' / ' + giant_heart_Arr.max_value + '] '+ Math.ceil(giant_heart_Arr.value/giant_heart_Arr.max_value*100)  +'%\n';
-    result += '▶️ ' + ignea_token_Arr.name +' ['+ ignea_token_Arr.value + ' / ' + ignea_token_Arr.max_value + '] '+ Math.ceil(ignea_token_Arr.value/ignea_token_Arr.max_value*100)  +'%\n';
-    result += '▶️ ' + masterpiece_Arr.name +' ['+ masterpiece_Arr.value + ' / ' + masterpiece_Arr.max_value + '] '+ Math.ceil(masterpiece_Arr.value/masterpiece_Arr.max_value*100)  +'%\n';
-    result += '▶️ ' + memory_orgel_Arr.name +' ['+ memory_orgel_Arr.value + ' / ' + memory_orgel_Arr.max_value + '] '+ Math.ceil(memory_orgel_Arr.value/memory_orgel_Arr.max_value*100)  +'%\n';
-    result += '▶️ ' + mokoko_seed_Arr.name +' ['+ mokoko_seed_Arr.value + ' / ' + mokoko_seed_Arr.max_value + '] '+ Math.ceil(mokoko_seed_Arr.value/mokoko_seed_Arr.max_value*100)  +'%\n';
-    result += '▶️ ' + orpheus_star_Arr.name +' ['+ orpheus_star_Arr.value + ' / ' + orpheus_star_Arr.max_value + '] '+ Math.ceil(orpheus_star_Arr.value/orpheus_star_Arr.max_value*100)  +'%\n';
-    result += '▶️ ' + sea_bounty_Arr.name +' ['+ sea_bounty_Arr.value + ' / ' + sea_bounty_Arr.max_value + '] '+ Math.ceil(sea_bounty_Arr.value/sea_bounty_Arr.max_value*100)  +'%\n';
-    result += '▶️ ' + world_tree_leaf_Arr.name +' ['+ world_tree_leaf_Arr.value + ' / ' + world_tree_leaf_Arr.max_value + '] '+ Math.ceil(world_tree_leaf_Arr.value/world_tree_leaf_Arr.max_value*100)  +'%\n';
-
+    result += '▶️ ' + island_heart_Arr.name +' ['+ island_heart_Arr.value + ' / ' + island_heart_Arr.max_value + '] '+ island_heart_score +'%\n';
+    result += '▶️ ' + giant_heart_Arr.name +' ['+ giant_heart_Arr.value + ' / ' + giant_heart_Arr.max_value + '] '+ giant_heart_score +'%\n';
+    result += '▶️ ' + ignea_token_Arr.name +' ['+ ignea_token_Arr.value + ' / ' + ignea_token_Arr.max_value + '] '+ ignea_token_score +'%\n';
+    result += '▶️ ' + masterpiece_Arr.name +' ['+ masterpiece_Arr.value + ' / ' + masterpiece_Arr.max_value + '] '+ masterpiece_score +'%\n';
+    result += '▶️ ' + memory_orgel_Arr.name +' ['+ memory_orgel_Arr.value + ' / ' + memory_orgel_Arr.max_value + '] '+ memory_orgel_score +'%\n';
+    result += '▶️ ' + mokoko_seed_Arr.name +' ['+ mokoko_seed_Arr.value + ' / ' + mokoko_seed_Arr.max_value + '] '+ mokoko_seed_score+'%\n';
+    result += '▶️ ' + orpheus_star_Arr.name +' ['+ orpheus_star_Arr.value + ' / ' + orpheus_star_Arr.max_value + '] '+ orpheus_star_score +'%\n';
+    result += '▶️ ' + sea_bounty_Arr.name +' ['+ sea_bounty_Arr.value + ' / ' + sea_bounty_Arr.max_value + '] '+ sea_bounty_score +'%\n';
+    result += '▶️ ' + world_tree_leaf_Arr.name +' ['+ world_tree_leaf_Arr.value + ' / ' + world_tree_leaf_Arr.max_value + '] '+ world_tree_leaf_score +'%\n';
+    result += '\n내실 점수 : ' + avg_collect + '%';
     return header + result;
 }
 
