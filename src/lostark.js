@@ -155,73 +155,71 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
 // 보석 정보 조회
 function getUserGem(nickName) {
 
-    var gemLvJson = new Array() ;
-    var gemInfoJson = new Array() ;
+    var data0;
 
-    var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
-    var data = data0.select("div.profile-ingame");
-    
-    if('캐릭터명을 확인해주세요.' == data.select("div > span:nth-child(2)").text()){
-        return '존재하지않는 캐릭터입니다.';
+    try{
+        data0 = org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/" + nickName).ignoreContentType(true).get().text();
+    } catch(e){
+        return '존재하지 않는 캐릭터입니다.';
     }
 
-    // 보석 레벨
-    var gemLvList = data.select("#profile-jewel > div > div.jewel__wrap").select("span");
-    var gemLvInfo = gemLvList.select(".jewel_level");
-    var gemidInfo = gemLvList.select(".jewel_btn");
+    var infoJson = JSON.stringify(data0);
+    infoJson = JSON.parse(data0);
     
-    // 보석 상세내용
-    var gemList = data.select("#profile-jewel > div > div.jewel-effect__list > div > ul").select("li")
+    var jewel_Key = Object.keys(infoJson.jewels);
 
-    // 보석 레벨 Json
-    for(var i=0; i<gemLvInfo.length; i++){
-        var gemInfo = gemLvInfo[i].text();
-        var gemId = gemidInfo[i].attr("id");
-        gemLvJson.push({'id' : gemId, 'gemInfo' : gemInfo});
-    }
-
-    // 보석 내용 json
-    for(var i=0; i<gemList.length; i++){
-        var gemInfo = gemList[i].select('.skill_details').text();
-        var gemKey = gemList[i].select("span").attr("data-gemkey");
-        gemInfoJson.push({'id' : gemKey, 'gemInfo' : gemInfo});
-    }
-    
-    // 보석 id 값으로 비교하여 일치한 데이터 생성
-    var headText = '';
     var bodyText = '';
-    var powerGemCnt = 0; // 멸화갯수
-    var coolGemCnt = 0;  // 홍염갯수
-    for(var i=0; i<gemLvJson.length; i++){
-        for(var j=0; j<gemInfoJson.length; j++){
-            if(gemLvJson[i].id == gemInfoJson[j].id){
-                if(gemInfoJson[j].gemInfo.indexOf('증가') != -1){
-                    bodyText += (gemLvJson[i].gemInfo + ' 멸화 '+ gemInfoJson[j].gemInfo) +'\n';
+    var powerGemCnt = 0;
+    var coolGemCnt = 0;
 
-                    powerGemCnt++;
-                } else{
-                    bodyText += (gemLvJson[i].gemInfo + ' 홍염 '+ gemInfoJson[j].gemInfo) +'\n';
-
-                    coolGemCnt++;
-                }
-                continue;
-            }
+    var jewel_arr = []; // 보석 배열 정렬 용 (내림차순)
+    for(var i=0; i < jewel_Key.length; i++){
+        if(infoJson.jewels[jewel_Key[i]].cooldown != null){      
+            // 7레벨 홍염의 보석 [스킬이름] 
+            jewel_arr.push({"name":infoJson.jewels[jewel_Key[i]].cooldown.name + ' ['+infoJson.jewels[jewel_Key[i]].cooldown.skill +']',
+                            "level": infoJson.jewels[jewel_Key[i]].cooldown.level
+                            });
+            coolGemCnt++;
+        }
+        if(infoJson.jewels[jewel_Key[i]].damage != null){     
+            jewel_arr.push({"name":infoJson.jewels[jewel_Key[i]].damage.name + ' ['+infoJson.jewels[jewel_Key[i]].damage.skill +']',
+                            "level": infoJson.jewels[jewel_Key[i]].damage.level
+                            }); 
+            powerGemCnt++;
         }
     }
 
+    var headText = '';
     headText += '📢 '+nickName+ ' 님의 보석 현황\n';
-    headText += '멸화 ['+powerGemCnt+'개] 홍염 ['+coolGemCnt+'개]\n\n';
+
+    if(powerGemCnt < 1 && coolGemCnt < 1){
+        headText += '장착된 보석이 없습니다.';
+    }
+    else{
+        headText += '멸화 ['+powerGemCnt+'개] 홍염 ['+coolGemCnt+'개]\n\n';
+    }
+
+    jewel_arr.sort((a,b) => b.level - a.level); // 내림차순
+
+    for(var i=0; i<jewel_arr.length; i++){
+        bodyText += jewel_arr[i].name + '\n';
+    }
+
     return headText + bodyText;
 }
 
 // 유저 정보
 function getUserinfo(nickName) {
-    var data0 = org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/" + nickName).ignoreContentType(true).get().text();
-    var infoJson = JSON.parse(data0);
 
-    if(infoJson.code == '404000'){
+    var data0;
+
+    try{
+        data0 = org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/" + nickName).ignoreContentType(true).get().text();
+    } catch(e){
         return '존재하지 않는 캐릭터입니다.';
     }
+
+    var infoJson = JSON.parse(data0);
 
     var retTxt = '';
     retTxt += "📢 "+ 'Lv.'+ infoJson.level +" " +nickName+"\n\n";
@@ -234,21 +232,24 @@ function getUserinfo(nickName) {
     }
     retTxt += '칭호 ♬ '+ (infoJson.title == null? '-' : infoJson.title)  +'\n';
     retTxt += '원정대 ♬ Lv.' + infoJson.expedition_level + '\nPVP ♬ '+ infoJson.pvp+'\n';
-    retTxt += '영지 ♬ '+infoJson.wisdom_name + ' Lv.' +infoJson.wisdom_level + '\n';
+    retTxt += '영지 ♬ '+infoJson.wisdom_name + ' Lv.' +infoJson.wisdom_level;
 
     return retTxt;
 }
 
 // 유저 악세사리
 function getUserAccessory(nickName) {
-    var data0 = org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/" + nickName).ignoreContentType(true).get().text();
+
+    var data0;
+
+    try{
+        data0 = org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/" + nickName).ignoreContentType(true).get().text();
+    } catch(e){
+        return '존재하지 않는 캐릭터입니다.';
+    }
 
     var infoJson = JSON.stringify(data0);
     infoJson = JSON.parse(data0);
-
-    if(infoJson.code == '404000'){
-        return '존재하지 않는 캐릭터입니다.';
-    }
 
     var necklace  = infoJson.equipments.necklace; //목걸이
     var earring_1 = infoJson.equipments.earring_1; // 귀걸이
@@ -348,14 +349,16 @@ function getUserAccessory(nickName) {
 // 유저 장비
 function getUseritem(nickName) {
 
-    var data0 = org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/" + nickName).ignoreContentType(true).get().text();
-    var infoJson = JSON.stringify(data0);
-    infoJson = JSON.parse(data0);
+    var data0;
 
-    if(infoJson.code == 'error'){
-        return '존재하지않는 캐릭터입니다.';
+    try{
+        data0 = org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/" + nickName).ignoreContentType(true).get().text();
+    } catch(e){
+        return '존재하지 않는 캐릭터입니다.';
     }
 
+    var infoJson = JSON.stringify(data0);
+    infoJson = JSON.parse(data0);
 
     var retTxt = '';
     retTxt += "📢 "+nickName+"님의 장비" +"\n\n";
@@ -544,7 +547,7 @@ function getCollection(nickName){
     result += '▶️ ' + orpheus_star_Arr.name +' ['+ orpheus_star_Arr.value + ' / ' + orpheus_star_Arr.max_value + '] '+ orpheus_star_score +'%\n';
     result += '▶️ ' + sea_bounty_Arr.name +' ['+ sea_bounty_Arr.value + ' / ' + sea_bounty_Arr.max_value + '] '+ sea_bounty_score +'%\n';
     result += '▶️ ' + world_tree_leaf_Arr.name +' ['+ world_tree_leaf_Arr.value + ' / ' + world_tree_leaf_Arr.max_value + '] '+ world_tree_leaf_score +'%\n';
-    result += '\n내실 점수 : ' + avg_collect + '%';
+    result += '\n내실 점수 : ' + Math.ceil(avg_collect) + '%';
     return header + result;
 }
 

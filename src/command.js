@@ -27,7 +27,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             retMsg += '\n\n🔘🔘🔘 LostArk 명령어 모음 🔘🔘🔘';
             retMsg += '\n╔══════════════════╗';
             retMsg += '\n※ 💬 명령어 [ . ]';
-            retMsg += '\n.정보 [닉네임] : 입력된 캐릭터의 기본정보 및 장비를 조회합니다.';
+            retMsg += '\n.정보 [닉네임] : 입력된 캐릭터의 기본정보를 조회합니다.';
             retMsg += '\n.장비 [닉네임] : 입력된 캐릭터의 장비정보를 조회합니다.';
             retMsg += '\n.장신구 [닉네임] : 입력된 캐릭터의 장신구정보를 조회합니다.';
             retMsg += '\n.아바타 [닉네임] : 입력된 캐릭터의 아바타 이미지를 조회합니다.';

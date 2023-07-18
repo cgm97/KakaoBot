@@ -10,6 +10,34 @@ const scriptName = "utill";
  */
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
 
+    // 짜장면 vs 짬뽕
+    var cmdArr = msg.split(' ');  
+    if(cmdArr.length < 4){
+        if(cmdArr[1] == 'vs'){
+            var random = Math.floor(Math.random()*(2)) + 1;
+    
+            if(random == 1){
+                replier.reply(cmdArr[0]);
+            } else {
+                replier.reply(cmdArr[2]);
+            }
+        }
+    }
+    // 짜장면 vs 짬뽕 vs 탕수육
+    if(cmdArr.length < 6 && cmdArr.length >=4 ){
+        if(cmdArr[1] == 'vs' && cmdArr[3] == 'vs'){
+            var random = Math.floor(Math.random()*(3)) + 1;
+    
+            if(random == 1){
+                replier.reply(cmdArr[0]);
+            } else if(random == 2){
+                replier.reply(cmdArr[2]);
+            } else {
+                replier.reply(cmdArr[4]);
+            }
+        }
+    }
+
     // if(room == '빈틈 테스트'){
         if(msg.startsWith("/")){
             let cmd = msg.slice(1);
