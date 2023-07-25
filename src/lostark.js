@@ -48,7 +48,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 replier.reply('잘못된 명령어 입니다.');
             }              
         }
-        if(param == '분배금'){
+        if(param == '분배금' || param == 'ㅂㅂㄱ'){
             let gold = msg.substr(cmdArr[0].length + 1).trim();
             if(!isNaN(gold)){
                 replier.reply(calGold(gold));
@@ -373,9 +373,11 @@ function getUseritem(nickName) {
         retTxt += 'Lv.'+infoJson.engraves[i].level+' '+infoJson.engraves[i].name+"\n";
     }
 
-    retTxt += "\n☆ [카드]\n";
-    var cardKey = Object.keys(infoJson.card_effects);
-    retTxt += infoJson.card_effects[cardKey][infoJson.card_effects[cardKey].length-1].name+'\n';
+    // var cardKey = Object.keys(infoJson.card_effects);
+    // if(cardKey.length < 1){
+    //     retTxt += "\n☆ [카드]\n";
+    //     retTxt += infoJson.card_effects[cardKey][infoJson.card_effects[cardKey].length-1].name+'\n';
+    // }
 
     var elixir_lv = 0;
     var hat    = infoJson.equipments.hat; //모자
@@ -524,15 +526,15 @@ function getCollection(nickName){
     var sea_bounty_Arr = infoJson.sea_bounty;
     var world_tree_leaf_Arr = infoJson.world_tree_leaf;
 
-    var island_heart_score = Math.ceil(island_heart_Arr.value/island_heart_Arr.max_value*100);
-    var giant_heart_score = Math.ceil(giant_heart_Arr.value/giant_heart_Arr.max_value*100);
-    var ignea_token_score = Math.ceil(ignea_token_Arr.value/ignea_token_Arr.max_value*100);
-    var masterpiece_score = Math.ceil(masterpiece_Arr.value/masterpiece_Arr.max_value*100);
-    var memory_orgel_score = Math.ceil(memory_orgel_Arr.value/memory_orgel_Arr.max_value*100);
-    var mokoko_seed_score =  Math.ceil(mokoko_seed_Arr.value/mokoko_seed_Arr.max_value*100);
-    var orpheus_star_score = Math.ceil(orpheus_star_Arr.value/orpheus_star_Arr.max_value*100);
-    var sea_bounty_score = Math.ceil(sea_bounty_Arr.value/sea_bounty_Arr.max_value*100);
-    var world_tree_leaf_score = Math.ceil(world_tree_leaf_Arr.value/world_tree_leaf_Arr.max_value*100);
+    var island_heart_score = Math.floor(island_heart_Arr.value/island_heart_Arr.max_value*100);
+    var giant_heart_score = Math.floor(giant_heart_Arr.value/giant_heart_Arr.max_value*100);
+    var ignea_token_score = Math.floor(ignea_token_Arr.value/ignea_token_Arr.max_value*100);
+    var masterpiece_score = Math.floor(masterpiece_Arr.value/masterpiece_Arr.max_value*100);
+    var memory_orgel_score = Math.floor(memory_orgel_Arr.value/memory_orgel_Arr.max_value*100);
+    var mokoko_seed_score =  Math.floor(mokoko_seed_Arr.value/mokoko_seed_Arr.max_value*100);
+    var orpheus_star_score = Math.floor(orpheus_star_Arr.value/orpheus_star_Arr.max_value*100);
+    var sea_bounty_score = Math.floor(sea_bounty_Arr.value/sea_bounty_Arr.max_value*100);
+    var world_tree_leaf_score = Math.floor(world_tree_leaf_Arr.value/world_tree_leaf_Arr.max_value*100);
 
     var avg_collect = (island_heart_score + giant_heart_score + ignea_token_score + masterpiece_score + memory_orgel_score + mokoko_seed_score +
                         orpheus_star_score + sea_bounty_score + world_tree_leaf_score) / 9;
@@ -547,7 +549,7 @@ function getCollection(nickName){
     result += '▶️ ' + orpheus_star_Arr.name +' ['+ orpheus_star_Arr.value + ' / ' + orpheus_star_Arr.max_value + '] '+ orpheus_star_score +'%\n';
     result += '▶️ ' + sea_bounty_Arr.name +' ['+ sea_bounty_Arr.value + ' / ' + sea_bounty_Arr.max_value + '] '+ sea_bounty_score +'%\n';
     result += '▶️ ' + world_tree_leaf_Arr.name +' ['+ world_tree_leaf_Arr.value + ' / ' + world_tree_leaf_Arr.max_value + '] '+ world_tree_leaf_score +'%\n';
-    result += '\n내실 점수 : ' + Math.ceil(avg_collect) + '%';
+    result += '\n내실 점수 : ' + Math.floor(avg_collect) + '%';
     return header + result;
 }
 

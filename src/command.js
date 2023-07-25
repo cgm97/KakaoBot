@@ -93,7 +93,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         if(param == '답변'){
             var sendRoom = cmdArr[1];
             var talk = cmdArr[2];
-            if(sender == '관리자' && room=='빈틈 테스트'){
+            if(sender == '관리자' && room=='빈틈테스트'){
                 var talk = '이전 질문 내용\n';
                 for(var i=2; i < cmdArr.length; i++){
                     if(cmdArr[i] == 'sp'){
@@ -114,7 +114,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         }
         // @공지 할말
         else if(param == '공지'){
-            if(sender == '관리자' && room=='빈틈 테스트'){
+            if(sender == '관리자' && room=='빈틈테스트'){
                 // var talk = cmdArr[1];
                 var talk = '';
                 for(var i=1; i < cmdArr.length; i++){
@@ -142,7 +142,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 for(var i=1; i < cmdArr.length; i++){
                     talk += cmdArr[i] + ' ';
                 }       
-                Api.replyRoom('빈틈 테스트', room + " 방 에서 문의가 왔습니다."+'\u200b'.repeat(501) + '\n\n'+ sender + ' > ' + talk);
+                Api.replyRoom('빈틈테스트', room + " 방 에서 문의가 왔습니다."+'\u200b'.repeat(501) + '\n\n'+ sender + ' > ' + talk);
                 replier.reply('정상적으로 문의가 전달 되었습니다.');
             } else {
                 replier.reply('문의 내용을 입력해주세요.');
@@ -164,7 +164,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 }       
 
                 try{
-                    Api.replyRoom('빈틈 테스트',"분양 문의가 도착했습니다."+'\u200b'.repeat(501) + '\n\n'+ sender + ' > ' + talk);
+                    Api.replyRoom('빈틈테스트',"분양 문의가 도착했습니다."+'\u200b'.repeat(501) + '\n\n'+ sender + ' > ' + talk);
                     replier.reply('정상적으로 분양 신청이 완료 되었습니다.');
                 } catch(e){
                     replier.reply('양식에 맞지 않아 신청이 실패되었습니다.');

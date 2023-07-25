@@ -3,11 +3,6 @@ const scriptName = "guild_util";
 const Path = '/sdcard/빈틈출석.json';
 const FS = FileStream;
 
-const Today = String(new Date().getFullYear()) + '/' + String(new Date().getMonth()+1) + '/' + String(new Date().getDate());
-
-
-
-
 /**
  * (string) room
  * (string) sender
@@ -37,6 +32,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
 
 // 출석체크
 function checkToday(name, room){
+    const Today = String(new Date().getFullYear()) + '/' + String(new Date().getMonth()+1) + '/' + String(new Date().getDate());
     let Time = String(new Date().getHours()) + '시 ' + String(new Date().getMinutes()) + '분 ' + String(new Date().getSeconds()) + '초';
     var str = '';
     let list = JSON.parse(FS.read(Path));
@@ -57,6 +53,7 @@ function checkToday(name, room){
 
 // 출석목록
 function checkList(room) {
+    const Today = String(new Date().getFullYear()) + '/' + String(new Date().getMonth()+1) + '/' + String(new Date().getDate());
     let list = JSON.parse(FS.read(Path));
     let locate = list.some(function(n){
         return n.Room === room;
