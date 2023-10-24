@@ -73,8 +73,8 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 var data0 = org.jsoup.Jsoup.connect("https://lostark.game.onstove.com/Profile/Character/" + nickName).get();
                 var imgUrl = data0.select(".profile-equipment__character img").attr("src");
 
-                replier.reply(Func.makeImgOG(nickName,imgUrl));  
-                // replier.reply(Func.makeImg(imgUrl,nickName,'아바타'));         
+                // replier.reply(Func.makeImgOG(nickName,imgUrl));  
+                replier.reply(Func.makeImg(imgUrl,nickName,'아바타'));         
             }
             else{
                 replier.reply('잘못된 명령어 입니다.');
@@ -353,6 +353,7 @@ function getUseritem(nickName) {
 
     try{
         data0 = org.jsoup.Jsoup.connect("https://api.korlark.com/lostark/character/" + nickName).ignoreContentType(true).get().text();
+        data1 = org.jsoup.Jsoup.connect("https://kloa.gg/crow/" + nickName).ignoreContentType(true).get().text();
     } catch(e){
         return '존재하지 않는 캐릭터입니다.';
     }
@@ -393,7 +394,12 @@ function getUseritem(nickName) {
         for(var i=0; i < hat.elixir_effect.details.length; i++){
             retTxt += (hat.elixir_effect.details[i].name+' Lv.'+hat.elixir_effect.details[i].level+'\n');
             elixir_lv += hat.elixir_effect.details[i].level;
-        }
+        } 
+    }
+    if(hat.transcendence != null){
+        var step =hat.transcendence.step;
+        var point =hat.transcendence.point;
+        retTxt += '초월 '+step+'단계 Lv.'+point+'\n';
         retTxt += '\n';
     }
     retTxt += "["+ornament.quality+"] +"+ornament.reinforce+' '+ornament.name+ "\n";
@@ -402,6 +408,11 @@ function getUseritem(nickName) {
             retTxt += (ornament.elixir_effect.details[i].name+' Lv.'+ornament.elixir_effect.details[i].level+'\n');
             elixir_lv += ornament.elixir_effect.details[i].level;
         }
+    }
+    if(ornament.transcendence != null){
+        var step =ornament.transcendence.step;
+        var point =ornament.transcendence.point;
+        retTxt += '초월 '+step+'단계 Lv.'+point+'\n';
         retTxt += '\n';
     }
     retTxt += "["+top.quality+"] +"+top.reinforce+' '+top.name+ "\n";
@@ -410,6 +421,11 @@ function getUseritem(nickName) {
             retTxt += (top.elixir_effect.details[i].name+' Lv.'+top.elixir_effect.details[i].level+'\n');
             elixir_lv += top.elixir_effect.details[i].level;
         }
+    }
+    if(top.transcendence != null){
+        var step =top.transcendence.step;
+        var point =top.transcendence.point;
+        retTxt += '초월 '+step+'단계 Lv.'+point+'\n';
         retTxt += '\n';
     }
     retTxt += "["+pants.quality+"] +"+pants.reinforce+' '+pants.name+ "\n";
@@ -418,6 +434,11 @@ function getUseritem(nickName) {
             retTxt += (pants.elixir_effect.details[i].name+' Lv.'+pants.elixir_effect.details[i].level+'\n');
             elixir_lv += pants.elixir_effect.details[i].level;
         }
+    }
+    if(pants.transcendence != null){
+        var step =pants.transcendence.step;
+        var point =pants.transcendence.point;
+        retTxt += '초월 '+step+'단계 Lv.'+point+'\n';
         retTxt += '\n';
     }
     retTxt += "["+gloves.quality+"] +"+gloves.reinforce+' '+gloves.name+ "\n";
@@ -426,6 +447,11 @@ function getUseritem(nickName) {
             retTxt += (gloves.elixir_effect.details[i].name+' Lv.'+gloves.elixir_effect.details[i].level+'\n');
             elixir_lv += gloves.elixir_effect.details[i].level;
         }
+    }
+    if(gloves.transcendence != null){
+        var step =gloves.transcendence.step;
+        var point =gloves.transcendence.point;
+        retTxt += '초월 '+step+'단계 Lv.'+point+'\n';
         retTxt += '\n';
     }
     retTxt += "["+weapon.quality+"] +"+weapon.reinforce+' '+weapon.name+ "\n";
@@ -463,38 +489,39 @@ function getMarketInfo(serverName){
         return '잘못된 서버명입니다.';
     }
     let info = JSON.parse(org.jsoup.Jsoup.connect("https://api.korlark.com/merchants?limit=15&server="+Func.SERVER_CODE[serverName]).ignoreContentType(true).get().text());
-    
-    var date = new Date();
-    var currentUtc = date.toISOString().substring(11,13); //현재 시각
 
     var header = '📢 떠돌이상인 - '+serverName+' ⸜(*◉ ᴗ ◉)⸝\n\n';
     var result = '';
 
-    var len = info.merchants.length-1;
     for(var i=0; i < info.merchants.length; i++){
 
-        var created_at = info.merchants[len-i].created_at.substring(11,13); // 떠상시각
+        var created_at = info.merchants[0].created_at.substring(11,13); // 현재 떠상
 
-        if(created_at == currentUtc){ // 현재 시간과 동일한 떠상 내역만 출력
-            var continent = info.merchants[len-i].continent; // 지역
-            var zone  = info.merchants[len-i].zone; // 마을
-            var card = info.merchants[len-i].card; // 카드
-            var heart = (info.merchants[len-i].rapport > 0) ? '전설호감도':'영웅호감도'; // 카드  
-            var extra = (info.merchants[len-i].extra == null) ? '': info.merchants[len-i].extra+' / ';
-              
-            result += '➡️ '+continent+" / ";
-            result += zone+" / ";
-            result += card+" / ";
-            result += extra;
-            result += heart;
-            result += "\n";
+        if(created_at == info.merchants[i].created_at.substring(11,13)){ // 현재 시간과 동일한 떠상 내역만 출력
+            var continent = info.merchants[i].continent; // 지역
+            result += '➡️ '+continent+"\n";
+
+            for(var j=0; j < info.merchants[i].items.length; j++){
+                var type = info.merchants[i].items[j].type; // 아이템 종류
+                if(type == 0){ // 카드
+                    result += info.merchants[i].items[j].content+" 카드 / ";
+                }
+                else if(type == 1){ // 호감도
+                    var content = info.merchants[i].items[j].content;
+                    if(content == "0"){
+                        result += "영웅호감도 / ";
+                    } else {
+                        result += "전설호감도 / ";
+                    }
+                }
+                else { // 기타(내실)
+                    result += info.merchants[i].items[j].content+" / ";
+                }
+            }
+            result += "\n\n";
         }
 
 
-    }
-
-    if(result == ''){
-        result = "현재는 떠돌이 상인이 떠났습니다. \n떠돌이 상인은 매 시 30분에 등장하고 55분에 사라집니다."
     }
     return header + result;
 }
@@ -878,14 +905,14 @@ function getPriceMarketItem(itemName) {
         if(flag == '각인서'){
             price = priceJson.Items[0].CurrentMinPrice;
             result +=  '📢 '+ itemName+' 각인서\n';
-            result +=  '현재가 : '+set_comma(price);
-            // result +=  Func.makeImg(priceJson.Items[0].Icon,itemName+" 각인서",set_comma(price));
+            // result +=  '현재가 : '+set_comma(price);
+            result +=  Func.makeImg(priceJson.Items[0].Icon,itemName+" 각인서",set_comma(price));
         } 
         else if(flag == '에스더'){
             price = priceJson.Items[0].CurrentMinPrice;
             result +=  '📢 '+ itemName+'\n';
-            result +=  '현재가 : '+set_comma(price);
-            // result +=  Func.makeImg(priceJson.Items[0].Icon,itemName+" 각인서",set_comma(price));
+            // result +=  '현재가 : '+set_comma(price);
+            result +=  Func.makeImg(priceJson.Items[0].Icon,itemName,set_comma(price));
         } 
 
     } catch(e){
@@ -918,8 +945,8 @@ function getPriceAuctionItem(itemName) {
         if(flag == '보석'){
             price = priceJson.Items[0].AuctionInfo.BuyPrice;
             result +=  '📢 '+ itemName+'\n';
-            result +=  '현재가 : '+set_comma(price);
-            // result +=  Func.makeImg(priceJson.Items[0].Icon,itemName,set_comma(price));
+            // result +=  '현재가 : '+set_comma(price);
+            result +=  Func.makeImg(priceJson.Items[0].Icon,itemName,set_comma(price));
         } 
 
     } catch(e){
